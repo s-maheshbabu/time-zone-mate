@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html ng-app="clock">
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="jquery.autocomplete.js"></script>
+
+<script src="moment.min.js"></script>
+<script src="moment-timezone-with-data.min.js"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
+<script src="app.js"></script>
+</head>
+
+<body>
+<div ng-controller="ClockController">
+    Local Time: 
+	<input type="text" name="localTime" size=13 ng-model="localTime">
+	<br /><br />
+	
+	<hr />
+	<input type="text" name="timeZoneToBeAdded" size=13 ng-model="timeZoneToBeAdded" auto-complete>
+	<input type="button" ng-click="addTimezone()" value="Add">
+	<br /><br />
+	
+	<ol>
+		<li ng-repeat="addedTimezone in addedTimezones">
+			<input type="text" name="addedTimezone" size=13 value={{addedTimezone.timestamp}}>
+		</li>
+	</ol>
+</div>
+
+</body>
+</html>
