@@ -11,7 +11,6 @@ app.factory('TimezoneObject', [function() {
 		setInterval(function() { _this.timestamp = getTimeStamp(timezoneName); }, 1000);
 	
 		function getTimeStamp(timezone) {
-			console.log('Calling...');
 			var time = moment();
 
 			if(timezone) {
@@ -44,9 +43,20 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimezoneObje
 				lookup: TimeZoneAutoCompleteService.getSource(),
 				autoSelectFirst: true,
 				onSelect: function (suggestion) {
-					
-					var timeZoneToBeAdded = suggestion.value;
+
+					var timeZoneToBeAdded = suggestion.value;				
 					console.log("Array size is " + scope.addedTimezones.length + " and we are adding " + timeZoneToBeAdded);
+
+					for (var i = 0; i < scope.addedTimezones.length; i++) {
+						if(scope.addedTimezones[i].timezoneName === timeZoneToBeAdded)
+						{
+							console.log("Requested time zone already exists. Moving it to the top");
+							var timezoneObjectsToBeBubbledUp = scope.addedTimezones.splice(i, 1);
+							scope.addedTimezones = timezoneObjectsToBeBubbledUp.concat(scope.addedTimezones);
+							return;
+						}
+					}
+
 					scope.addedTimezones.push(new TimezoneObject(timeZoneToBeAdded));
 				},
 				onInvalidateSelection: function () {
