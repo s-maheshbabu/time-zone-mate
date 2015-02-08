@@ -8,8 +8,27 @@ app.factory('TimezoneObject', [function() {
 		this.timestamp = getTimeStamp(timezoneName);
 		
 		var _this = this;
-		setInterval(function() { _this.timestamp = getTimeStamp(timezoneName); }, 1000);
-	
+
+		var timer = null;
+		// Control the timer. If set to true, timers will be triggered. If set to false, any existing timers will be stopped.
+		this.timerManager = function (flag) {
+			if(flag) {
+				clearInterval(timer);
+				timer =  setInterval(function() { _this.timestamp = getTimeStamp(timezoneName); }, 1000);
+			}
+			else {
+				clearInterval(timer);
+			}
+		};
+		this.timerManager(true);
+
+		// Stops the timers and sets the timestamp to the given value.
+		this.setTimestamp = function (timestamp)
+		{
+			clearInterval(timer);
+			this.timestamp = timestamp;
+		}
+
 		function getTimeStamp(timezone) {
 			var time = moment();
 
@@ -73,6 +92,19 @@ app.controller('ClockController', ['$scope', '$interval', 'TimezoneObject', func
 
 	$scope.localTime = localTimezoneObject.toString();
 	
+	// One of the timestamps was changed by the user.
+	$scope.timestampChanged = function(index) {
+        console.log("User edited one of the timestamps. Stopping all clocks.");
+		var editedTimestamp = $scope.addedTimezones[index].timestamp;
+		for (var i = 0; i < $scope.addedTimezones.length; i++) {
+			$scope.addedTimezones[i].timerManager(false);
+			if(i != index)
+			{
+				$scope.addedTimezones[i].setTimestamp(editedTimestamp);
+			}
+		}
+    };
+
 	$scope.addTimezone = function() {
 		console.log("Add button clicked");
 	};
