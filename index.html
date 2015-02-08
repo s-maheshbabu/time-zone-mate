@@ -24,7 +24,7 @@
 	
 	<ol>
 		<li ng-repeat="addedTimezone in addedTimezones">
-			<input type="text" name="addedTimezone" size=13 value={{addedTimezone.timestamp}}>
+			<input type="text" name="addedTimezone" size=13 ng-model="addedTimezone.timestamp">
 		</li>
 	</ol>
 </div>
