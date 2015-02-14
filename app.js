@@ -73,7 +73,7 @@ app.factory('TimezoneObject', [function() {
     return TimezoneObject;
 }]);
 
-app.factory('AllTimezones', ['TimezoneObject', function(TimezoneObject) {
+app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject) {
 	var localTimezoneObject = new TimezoneObject();
 	var addedTimezones = [new TimezoneObject("UTC")];
 
@@ -95,7 +95,7 @@ app.factory('TimeZoneAutoCompleteService', [function() {
     }
 }]);
 
-app.directive('uiTimepickerEvents', function(AllTimezones) {
+app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
     return {
         restrict: 'A',
         scope: {
@@ -108,7 +108,7 @@ app.directive('uiTimepickerEvents', function(AllTimezones) {
             });
 
 			elem.on('change', function() {
-				var addedTimezones = AllTimezones.addedTimezones();
+				var addedTimezones = TimeZoneClocksManager.addedTimezones();
 				console.log("A valid time was entered by the user: " + addedTimezones[scope.index].vanillaDate);
 
 				var editedDate = addedTimezones[scope.index].vanillaDate;
@@ -161,11 +161,11 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimezoneObje
     };
 });
 
-app.controller('ClockController', ['$scope', '$interval', 'AllTimezones', 'TimezoneObject', function($scope, $interval, AllTimezones, TimezoneObject) {
-	var localTimezoneObject = AllTimezones.localTimezoneObject();
+app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager', 'TimezoneObject', function($scope, $interval, TimeZoneClocksManager, TimezoneObject) {
+	var localTimezoneObject = TimeZoneClocksManager.localTimezoneObject();
 	$scope.localTime = localTimezoneObject;
 
-	$scope.addedTimezones = AllTimezones.addedTimezones();
+	$scope.addedTimezones = TimeZoneClocksManager.addedTimezones();
 
 	// One of the timestamps was changed by the user.
 	$scope.timestampChanged = function(index) {
