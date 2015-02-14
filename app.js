@@ -29,6 +29,7 @@ app.factory('TimezoneObject', [function() {
 				clearInterval(timer);
 			}
 		};
+		this.timerManager(true);
 
 		function getVanillaDate() {
 			var m = _this.moment;
@@ -73,10 +74,11 @@ app.factory('TimezoneObject', [function() {
 }]);
 
 app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject) {
+	var clocksRunning = true;
+
 	var localTimezoneObject = new TimezoneObject();
 	var addedTimezones = [new TimezoneObject("UTC")];
 
-	var clocksRunning = true;
 	return {
         addedTimezones: function() {
             return addedTimezones;
