@@ -2,12 +2,16 @@
 <html ng-app="clock">
 <head>
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
+
 <script src="jquery.autocomplete.js"></script>
+
+<script src="jquery.timepicker.min.js"></script>
+<script src="timepickerdirective.min.js"></script>
 
 <script src="moment.min.js"></script>
 <script src="moment-timezone-with-data.min.js"></script>
 
-<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.min.js"></script>
 <script src="app.js"></script>
 </head>
 
@@ -24,9 +28,12 @@
 	
 	<ol>
 		<li ng-repeat="addedTimezone in addedTimezones">
-			<input type="text" name="addedTimezone" size=13 ng-model="addedTimezone.timestamp" ng-change="timestampChanged($index)">
+			<input type="text" name="addedTimezone" size=13 ng-model="addedTimezone.timestamp">
+			<input type="text" size=13 index="$index" ng-model="addedTimezone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
 		</li>
 	</ol>
+
+	<hr />
 </div>
 
 </body>
