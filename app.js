@@ -83,7 +83,23 @@ app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject)
         },
 		localTimezoneObject: function() {
             return localTimezoneObject;
-        }
+        },
+		// Adds a new timezone object for the given timezone. If an object for the given timezone already exists,
+		// we just move the corresponding object to the top of the list.
+		addTimezone: function(timeZoneToBeAdded) {
+			console.log("We already have " + addedTimezones.length + " timezones and we are adding " + timeZoneToBeAdded);
+
+			for (var i = 0; i < addedTimezones.length; i++) {
+				if(addedTimezones[i].timezoneName === timeZoneToBeAdded) {
+					console.log("Requested time zone already exists. Moving it to the top");
+					var timezoneObjectsToBeBubbledUp = addedTimezones.splice(i, 1);
+					addedTimezones = timezoneObjectsToBeBubbledUp.concat(addedTimezones);
+					return;
+				}
+			}
+
+			addedTimezones.push(new TimezoneObject(timeZoneToBeAdded));
+		}
     }
 }]);
 	
@@ -104,7 +120,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
         link: function(scope, elem, attr) {
 
 			elem.on('changeTime', function() {
-                console.log("Time picker is ticking");
+                // console.log("Time picker is ticking");
             });
 
 			elem.on('change', function() {
@@ -129,7 +145,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
     };
 });
 
-app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimezoneObject) {
+app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneClocksManager, TimezoneObject) {
     return {
         restrict: 'A',
         link: function(scope, elem, attr, ctrl) {
@@ -138,7 +154,9 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimezoneObje
 				autoSelectFirst: true,
 				onSelect: function (suggestion) {
 
-					var timeZoneToBeAdded = suggestion.value;				
+					var timeZoneToBeAdded = suggestion.value;
+					TimeZoneClocksManager.addTimezone(timeZoneToBeAdded);
+					return;
 					console.log("Array size is " + scope.addedTimezones.length + " and we are adding " + timeZoneToBeAdded);
 
 					for (var i = 0; i < scope.addedTimezones.length; i++) {
@@ -175,10 +193,13 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 		}
     };
 
-	$scope.addTimezone = function() {
-		console.log("Add button clicked");
-	};
-	
+	// Whenever the addedTimezones list changes, update the UI.
+	$scope.$watch(function () { return TimeZoneClocksManager.addedTimezones() }, function (newVal, oldVal) {
+		if (typeof newVal !== 'undefined') {
+			$scope.addedTimezones = TimeZoneClocksManager.addedTimezones();
+		}
+	});
+
 	$interval(function(){
 		$scope.localTime = localTimezoneObject;
 	},1000);

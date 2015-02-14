@@ -28,6 +28,7 @@
 	
 	<ol>
 		<li ng-repeat="addedTimezone in addedTimezones">
+		    <label> {{addedTimezone.timezoneName}} </label>
 			<input type="text" size=13 index="$index" ng-model="addedTimezone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
 		</li>
 	</ol>
