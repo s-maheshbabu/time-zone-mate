@@ -9,10 +9,11 @@ angular.module('ui.timepicker').value('uiTimepickerConfig',{
 app.factory('TimezoneObject', [function() {
 	function TimezoneObject(timezoneName)
 	{
+		var _this = this;
+
 		this.timezoneName=timezoneName;
 		this.moment = getMoment(timezoneName);
-		
-		var _this = this;
+		this.vanillaDate = getVanillaDate();
 
 		var timer = null;
 		// Control the timer. If set to true, timers will be triggered. If set to false, any existing timers will be stopped.
@@ -30,12 +31,13 @@ app.factory('TimezoneObject', [function() {
 		};
 		this.timerManager(true);
 
-		this.vanillaDate = getVanillaDate();
 		function getVanillaDate() {
 			var m = _this.moment;
 			return new Date(m.year(), m.month(), m.date(),  m.hours(), m.minutes(), m.seconds());
 		};
-		this.setVanillaDate = function ( date) {
+
+		this.setVanillaDate = function (date) {
+			clearInterval(timer);
 			this.vanillaDate = date;
 		}
 
@@ -48,6 +50,21 @@ app.factory('TimezoneObject', [function() {
 			
 			return time;
 		};
+
+		// Given a date and timezone, sets the moment to the corresponding moment in this timezone.
+		// If <code>this</code> is a PST timezone object and if the input is 2 AM IST, the moment will
+		// be set to whatever the time is in PST when it is 2 AM IST.
+		this.setMoment = function (date, timezoneName) {
+			var inputMoment = moment.tz(moment(date).format('YYYY-M-D hh:mm:ss A'), "YYYY-M-D hh:mm:ss A", timezoneName);
+
+			// Corresponding moment in this timezone
+			var thisTimezoneMoment = inputMoment.tz(_this.timezoneName);
+
+			clearInterval(timer);
+			_this.moment = thisTimezoneMoment;
+
+			_this.vanillaDate = getVanillaDate();
+		}
 	};
 	TimezoneObject.prototype.toString = function() {
 		return "NotImplemented";
@@ -91,12 +108,15 @@ app.directive('uiTimepickerEvents', function(AllTimezones) {
             });
 
 			elem.on('change', function() {
-                console.log("A valid time was entered by the user");
 				var addedTimezones = AllTimezones.addedTimezones();
+				console.log("A valid time was entered by the user: " + addedTimezones[scope.index].vanillaDate);
+
+				var editedDate = addedTimezones[scope.index].vanillaDate;
+				var editedtimezone = addedTimezones[scope.index].timezoneName;
 				for (var i = 0; i < addedTimezones.length; i++) {
 					if(i != scope.index)
 					{
-						addedTimezones[i].setVanillaDate(new Date());
+						addedTimezones[i].setMoment(editedDate, editedtimezone);
 					}
 					addedTimezones[i].timerManager(false);
 				}
