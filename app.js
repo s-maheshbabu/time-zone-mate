@@ -145,7 +145,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
     };
 });
 
-app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneClocksManager, TimezoneObject) {
+app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneClocksManager) {
     return {
         restrict: 'A',
         link: function(scope, elem, attr, ctrl) {
@@ -153,23 +153,8 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 				lookup: TimeZoneAutoCompleteService.getSource(),
 				autoSelectFirst: true,
 				onSelect: function (suggestion) {
-
 					var timeZoneToBeAdded = suggestion.value;
 					TimeZoneClocksManager.addTimezone(timeZoneToBeAdded);
-					return;
-					console.log("Array size is " + scope.addedTimezones.length + " and we are adding " + timeZoneToBeAdded);
-
-					for (var i = 0; i < scope.addedTimezones.length; i++) {
-						if(scope.addedTimezones[i].timezoneName === timeZoneToBeAdded)
-						{
-							console.log("Requested time zone already exists. Moving it to the top");
-							var timezoneObjectsToBeBubbledUp = scope.addedTimezones.splice(i, 1);
-							scope.addedTimezones = timezoneObjectsToBeBubbledUp.concat(scope.addedTimezones);
-							return;
-						}
-					}
-
-					scope.addedTimezones.push(new TimezoneObject(timeZoneToBeAdded));
 				},
 				onInvalidateSelection: function () {
 					console.log("Invalid Value");
@@ -179,7 +164,7 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
     };
 });
 
-app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager', 'TimezoneObject', function($scope, $interval, TimeZoneClocksManager, TimezoneObject) {
+app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager', function($scope, $interval, TimeZoneClocksManager) {
 	var localTimezoneObject = TimeZoneClocksManager.localTimezoneObject();
 	$scope.localTime = localTimezoneObject;
 
