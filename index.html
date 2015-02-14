@@ -18,7 +18,7 @@
 <body>
 <div ng-controller="ClockController">
     Local Time: 
-	<input type="text" name="localTime" size=13 ng-model="localTime">
+	<input type="text" name="localTime" size=13 ng-model="localTime.vanillaDate" ui-timepicker ui-timepicker-events>
 	<br /><br />
 	
 	<hr />
@@ -28,7 +28,6 @@
 	
 	<ol>
 		<li ng-repeat="addedTimezone in addedTimezones">
-			<input type="text" name="addedTimezone" size=13 ng-model="addedTimezone.timestamp">
 			<input type="text" size=13 index="$index" ng-model="addedTimezone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
 		</li>
 	</ol>

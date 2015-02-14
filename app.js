@@ -11,7 +11,6 @@ app.factory('TimezoneObject', [function() {
 	{
 		this.timezoneName=timezoneName;
 		this.moment = getMoment(timezoneName);
-		this.timestamp = getTimeStamp(timezoneName);
 		
 		var _this = this;
 
@@ -21,7 +20,6 @@ app.factory('TimezoneObject', [function() {
 			if(flag) {
 				clearInterval(timer);
 				timer =  setInterval(function() {
-					_this.timestamp = getTimeStamp(timezoneName); 
 					_this.moment = getMoment(timezoneName);
 					_this.vanillaDate = getVanillaDate();
 				}, 1000);
@@ -31,13 +29,6 @@ app.factory('TimezoneObject', [function() {
 			}
 		};
 		this.timerManager(true);
-
-		// Stops the timers and sets the timestamp to the given value.
-		this.setTimestamp = function (timestamp)
-		{
-			clearInterval(timer);
-			this.timestamp = timestamp;
-		}
 
 		this.vanillaDate = getVanillaDate();
 		function getVanillaDate() {
@@ -57,18 +48,9 @@ app.factory('TimezoneObject', [function() {
 			
 			return time;
 		};
-
-		function getTimeStamp(timezone) {
-			var time = moment();
-
-			if(timezone) {
-				time.tz(timezone);
-			}
-			return time.format('hh:mm:ss A');
-		};
 	};
 	TimezoneObject.prototype.toString = function() {
-		return this.timestamp;
+		return "NotImplemented";
 	}
 	
     return TimezoneObject;
@@ -103,6 +85,7 @@ app.directive('uiTimepickerEvents', function(AllTimezones) {
             index: '=index'
         },
         link: function(scope, elem, attr) {
+
 			elem.on('changeTime', function() {
                 console.log("Time picker is ticking");
             });
@@ -110,14 +93,13 @@ app.directive('uiTimepickerEvents', function(AllTimezones) {
 			elem.on('change', function() {
                 console.log("A valid time was entered by the user");
 				var addedTimezones = AllTimezones.addedTimezones();
-				var editedTimestamp = addedTimezones[scope.index].timestamp;
 				for (var i = 0; i < addedTimezones.length; i++) {
 					if(i != scope.index)
 					{
 						addedTimezones[i].setVanillaDate(new Date());
 					}
 					addedTimezones[i].timerManager(false);
-				}					
+				}
             });
 
 			elem.on('timeFormatError', function() {
@@ -161,14 +143,13 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimezoneObje
 
 app.controller('ClockController', ['$scope', '$interval', 'AllTimezones', 'TimezoneObject', function($scope, $interval, AllTimezones, TimezoneObject) {
 	var localTimezoneObject = AllTimezones.localTimezoneObject();
-	$scope.addedTimezones = AllTimezones.addedTimezones();
+	$scope.localTime = localTimezoneObject;
 
-	$scope.localTime = localTimezoneObject.toString();
+	$scope.addedTimezones = AllTimezones.addedTimezones();
 
 	// One of the timestamps was changed by the user.
 	$scope.timestampChanged = function(index) {
         console.log("User edited one of the timestamps. Stopping all clocks.");
-		var editedTimestamp = $scope.addedTimezones[index].timestamp;
 		for (var i = 0; i < $scope.addedTimezones.length; i++) {
 			$scope.addedTimezones[i].timerManager(false);
 		}
@@ -179,7 +160,7 @@ app.controller('ClockController', ['$scope', '$interval', 'AllTimezones', 'Timez
 	};
 	
 	$interval(function(){
-		$scope.localTime=localTimezoneObject.toString();
+		$scope.localTime = localTimezoneObject;
 	},1000);
 }]);
 
