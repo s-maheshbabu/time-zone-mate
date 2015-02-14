@@ -29,7 +29,6 @@ app.factory('TimezoneObject', [function() {
 				clearInterval(timer);
 			}
 		};
-		this.timerManager(true);
 
 		function getVanillaDate() {
 			var m = _this.moment;
@@ -77,6 +76,7 @@ app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject)
 	var localTimezoneObject = new TimezoneObject();
 	var addedTimezones = [new TimezoneObject("UTC")];
 
+	var clocksRunning = true;
 	return {
         addedTimezones: function() {
             return addedTimezones;
@@ -97,8 +97,15 @@ app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject)
 					return;
 				}
 			}
-
-			addedTimezones.push(new TimezoneObject(timeZoneToBeAdded));
+			var timezoneObjectToBeAdded = new TimezoneObject(timeZoneToBeAdded);
+			timezoneObjectToBeAdded.timerManager(clocksRunning);
+			addedTimezones.push(timezoneObjectToBeAdded);
+		},
+		stopClocks: function() {
+			clocksRunning = false;
+			for (var i = 0; i < addedTimezones.length; i++) {
+				addedTimezones[i].timerManager(clocksRunning);
+			}
 		}
     }
 }]);
@@ -129,12 +136,13 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 
 				var editedDate = addedTimezones[scope.index].vanillaDate;
 				var editedtimezone = addedTimezones[scope.index].timezoneName;
+
+				TimeZoneClocksManager.stopClocks();
 				for (var i = 0; i < addedTimezones.length; i++) {
 					if(i != scope.index)
 					{
 						addedTimezones[i].setMoment(editedDate, editedtimezone);
 					}
-					addedTimezones[i].timerManager(false);
 				}
             });
 
