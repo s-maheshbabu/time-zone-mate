@@ -99,8 +99,17 @@ app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject)
 					return;
 				}
 			}
+
 			var timezoneObjectToBeAdded = new TimezoneObject(timeZoneToBeAdded);
 			timezoneObjectToBeAdded.timerManager(clocksRunning);
+
+			// If clocks are not running, new timezones being added shouldn't show the current time in that timezone.
+			// We should instead pick any of the existing clocks, convert the time to the new timezone and show it.
+			if(!clocksRunning) {
+				if(addedTimezones.length > 0) {
+					timezoneObjectToBeAdded.setMoment(addedTimezones[0].vanillaDate, addedTimezones[0].timezoneName);
+				}
+			}
 			addedTimezones.push(timezoneObjectToBeAdded);
 		},
 		stopClocks: function() {
