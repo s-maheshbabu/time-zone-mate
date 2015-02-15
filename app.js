@@ -12,6 +12,10 @@ app.factory('TimezoneObject', [function() {
 		var _this = this;
 
 		this.timezoneName=timezoneName;
+		if(!timezoneName)
+		{
+			this.timezoneName = jstz.determine().name();
+		}
 		this.moment = getMoment(timezoneName);
 		this.vanillaDate = getVanillaDate();
 
@@ -64,7 +68,7 @@ app.factory('TimezoneObject', [function() {
 			_this.moment = thisTimezoneMoment;
 
 			_this.vanillaDate = getVanillaDate();
-		}
+        }
 	};
 	TimezoneObject.prototype.toString = function() {
 		return "NotImplemented";
@@ -76,19 +80,23 @@ app.factory('TimezoneObject', [function() {
 app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject) {
 	var clocksRunning = true;
 
-	var localTimezoneObject = new TimezoneObject();
-	var addedTimezones = [new TimezoneObject("UTC")];
+	var allTimezones = [new TimezoneObject(), new TimezoneObject("UTC")];
 
 	return {
+		allTimezones: function() {
+			return allTimezones;
+		},
         addedTimezones: function() {
-            return addedTimezones;
+            return allTimezones.slice(1);
         },
 		localTimezoneObject: function() {
-            return localTimezoneObject;
+            return allTimezones[0];
         },
 		// Adds a new timezone object for the given timezone. If an object for the given timezone already exists,
 		// we just move the corresponding object to the top of the list.
 		addTimezone: function(timeZoneToBeAdded) {
+			var addedTimezones = this.addedTimezones();
+			var localTimezoneObject = this.localTimezoneObject();
 			console.log("We already have " + addedTimezones.length + " timezones and we are adding " + timeZoneToBeAdded);
 
 			for (var i = 0; i < addedTimezones.length; i++) {
@@ -96,6 +104,7 @@ app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject)
 					console.log("Requested time zone already exists. Moving it to the top");
 					var timezoneObjectsToBeBubbledUp = addedTimezones.splice(i, 1);
 					addedTimezones = timezoneObjectsToBeBubbledUp.concat(addedTimezones);
+					allTimezones = [allTimezones[0]].concat(addedTimezones);
 					return;
 				}
 			}
@@ -104,18 +113,19 @@ app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject)
 			timezoneObjectToBeAdded.timerManager(clocksRunning);
 
 			// If clocks are not running, new timezones being added shouldn't show the current time in that timezone.
-			// We should instead pick any of the existing clocks, convert the time to the new timezone and show it.
+			// We should instead pick any of the existing clocks (we pick the local clock), convert the time to the new timezone and show it.
 			if(!clocksRunning) {
 				if(addedTimezones.length > 0) {
-					timezoneObjectToBeAdded.setMoment(addedTimezones[0].vanillaDate, addedTimezones[0].timezoneName);
+					timezoneObjectToBeAdded.setMoment(localTimezoneObject.vanillaDate, localTimezoneObject.timezoneName);
 				}
 			}
 			addedTimezones.push(timezoneObjectToBeAdded);
+			allTimezones = [allTimezones[0]].concat(addedTimezones);
 		},
 		stopClocks: function() {
 			clocksRunning = false;
-			for (var i = 0; i < addedTimezones.length; i++) {
-				addedTimezones[i].timerManager(clocksRunning);
+			for (var i = 0; i < allTimezones.length; i++) {
+				allTimezones[i].timerManager(clocksRunning);
 			}
 		}
     }
@@ -142,17 +152,17 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
             });
 
 			elem.on('change', function() {
-				var addedTimezones = TimeZoneClocksManager.addedTimezones();
-				console.log("A valid time was entered by the user: " + addedTimezones[scope.index].vanillaDate);
+				var allTimezones = TimeZoneClocksManager.allTimezones();
+				console.log("A valid time was entered by the user: " + allTimezones[scope.index].vanillaDate + " at index: " + scope.index);
 
-				var editedDate = addedTimezones[scope.index].vanillaDate;
-				var editedtimezone = addedTimezones[scope.index].timezoneName;
+				var editedDate = allTimezones[scope.index].vanillaDate;
+				var editedtimezone = allTimezones[scope.index].timezoneName;
 
 				TimeZoneClocksManager.stopClocks();
-				for (var i = 0; i < addedTimezones.length; i++) {
+				for (var i = 0; i < allTimezones.length; i++) {
 					if(i != scope.index)
 					{
-						addedTimezones[i].setMoment(editedDate, editedtimezone);
+						allTimezones[i].setMoment(editedDate, editedtimezone);
 					}
 				}
             });
@@ -187,7 +197,7 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	var localTimezoneObject = TimeZoneClocksManager.localTimezoneObject();
 	$scope.localTime = localTimezoneObject;
 
-	$scope.addedTimezones = TimeZoneClocksManager.addedTimezones();
+	$scope.allTimezones = TimeZoneClocksManager.allTimezones();
 
 	// One of the timestamps was changed by the user.
 	$scope.timestampChanged = function(index) {
@@ -195,10 +205,11 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 		TimeZoneClocksManager.stopClocks();
     };
 
-	// Whenever the addedTimezones list changes, update the UI.
-	$scope.$watch(function () { return TimeZoneClocksManager.addedTimezones() }, function (newVal, oldVal) {
+	// Whenever the allTimezones list changes, update the UI.
+	$scope.$watch(function () { return TimeZoneClocksManager.allTimezones() }, function (newVal, oldVal) {
 		if (typeof newVal !== 'undefined') {
-			$scope.addedTimezones = TimeZoneClocksManager.addedTimezones();
+			$scope.localTime = TimeZoneClocksManager.localTimezoneObject();
+			$scope.allTimezones = TimeZoneClocksManager.allTimezones();
 		}
 	});
 
