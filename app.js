@@ -192,9 +192,7 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	// One of the timestamps was changed by the user.
 	$scope.timestampChanged = function(index) {
         console.log("User edited one of the timestamps. Stopping all clocks.");
-		for (var i = 0; i < $scope.addedTimezones.length; i++) {
-			$scope.addedTimezones[i].timerManager(false);
-		}
+		TimeZoneClocksManager.stopClocks();
     };
 
 	// Whenever the addedTimezones list changes, update the UI.
