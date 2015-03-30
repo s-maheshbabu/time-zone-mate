@@ -55,6 +55,13 @@ app.factory('TimeZoneObject', [function() {
 			return time;
 		};
 
+		// Resets <code>this</code> time zone object to current time and starts the timers.
+		this.resetMoment = function () {
+			_this.moment = getMoment(timeZoneName);
+			_this.vanillaDate = getVanillaDate();
+			_this.timerManager(true);
+		};
+
 		// Given a date and timeZone, sets the moment to the corresponding moment in this timeZone.
 		// If <code>this</code> is a PST timeZone object and if the input is 2 AM IST, the moment will
 		// be set to whatever the time is in PST when it is 2 AM IST.
@@ -95,6 +102,13 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 		// Removes the timeZone at the specified index.
 		removeTimeZone: function(index) {
 			allTimeZones.splice(index, 1);
+		},
+		// Resets each time zone object to current time and set the clocks to start running.
+		resetAllClocks: function(index) {
+			for (var i = 0; i < allTimeZones.length; i++) {
+				allTimeZones[i].resetMoment();
+				clocksRunning = true;
+			}
 		},
 		// Adds a new timeZone object for the given timeZone. If an object for the given timeZone already exists,
 		// we just move the corresponding object to the top of the list.
@@ -213,6 +227,12 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	$scope.removeTimeZone = function(index) {
         console.log("Attempting to remove added clock at index " + index);
 		TimeZoneClocksManager.removeTimeZone(index);
+    };
+
+	// A time zone is being removed.
+	$scope.resetAllClocks = function() {
+        console.log("All clocks are being reset to the current time");
+		TimeZoneClocksManager.resetAllClocks();
     };
 
 	// Whenever the allTimeZones list changes, update the UI.
