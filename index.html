@@ -4,7 +4,7 @@
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.26/angular.js"></script>
 
-<!-- Determine local timezone name -->
+<!-- Determine local timeZone name -->
 <script type="text/javascript" src='https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.4/jstz.min.js'></script>
 
 <script src="jquery.autocomplete.js"></script>
@@ -26,14 +26,14 @@
 	
 	<hr />
 	<input type="text" name="timeZoneToBeAdded" size=13 ng-model="timeZoneToBeAdded" auto-complete>
-	<input type="button" ng-click="addTimezone()" value="Add">
+	<input type="button" ng-click="addTimeZone()" value="Add">
 	<br /><br />
 	
 	<ol>
-		<li ng-repeat="addedTimezone in allTimezones" ng-if="$index > 0">
-		    <label> {{addedTimezone.timezoneName}} </label>
-			<input type="text" size=13 index="$index" ng-model="addedTimezone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
-			<input type="button" index="$index" ng-click="removeTimezone($index)" value="Remove">
+		<li ng-repeat="addedTimeZone in allTimeZones" ng-if="$index > 0">
+		    <label> {{addedTimeZone.timeZoneName}} </label>
+			<input type="text" size=13 index="$index" ng-model="addedTimeZone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
+			<input type="button" index="$index" ng-click="removeTimeZone($index)" value="Remove">
 		</li>
 	</ol>
 

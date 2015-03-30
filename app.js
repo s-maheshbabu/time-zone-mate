@@ -6,17 +6,17 @@ angular.module('ui.timepicker').value('uiTimepickerConfig',{
   timeFormat: 'h:i:s A'
 });
 
-app.factory('TimezoneObject', [function() {
-	function TimezoneObject(timezoneName)
+app.factory('TimeZoneObject', [function() {
+	function TimeZoneObject(timeZoneName)
 	{
 		var _this = this;
 
-		this.timezoneName=timezoneName;
-		if(!timezoneName)
+		this.timeZoneName=timeZoneName;
+		if(!timeZoneName)
 		{
-			this.timezoneName = jstz.determine().name();
+			this.timeZoneName = jstz.determine().name();
 		}
-		this.moment = getMoment(timezoneName);
+		this.moment = getMoment(timeZoneName);
 		this.vanillaDate = getVanillaDate();
 
 		var timer = null;
@@ -25,7 +25,7 @@ app.factory('TimezoneObject', [function() {
 			if(flag) {
 				clearInterval(timer);
 				timer =  setInterval(function() {
-					_this.moment = getMoment(timezoneName);
+					_this.moment = getMoment(timeZoneName);
 					_this.vanillaDate = getVanillaDate();
 				}, 1000);
 			}
@@ -45,91 +45,91 @@ app.factory('TimezoneObject', [function() {
 			this.vanillaDate = date;
 		}
 
-		function getMoment(timezone) {
+		function getMoment(timeZone) {
 			var time = moment();
 
-			if(timezone) {
-				time.tz(timezone);
+			if(timeZone) {
+				time.tz(timeZone);
 			}
 			
 			return time;
 		};
 
-		// Given a date and timezone, sets the moment to the corresponding moment in this timezone.
-		// If <code>this</code> is a PST timezone object and if the input is 2 AM IST, the moment will
+		// Given a date and timeZone, sets the moment to the corresponding moment in this timeZone.
+		// If <code>this</code> is a PST timeZone object and if the input is 2 AM IST, the moment will
 		// be set to whatever the time is in PST when it is 2 AM IST.
-		this.setMoment = function (date, timezoneName) {
-			var inputMoment = moment.tz(moment(date).format('YYYY-M-D hh:mm:ss A'), "YYYY-M-D hh:mm:ss A", timezoneName);
+		this.setMoment = function (date, timeZoneName) {
+			var inputMoment = moment.tz(moment(date).format('YYYY-M-D hh:mm:ss A'), "YYYY-M-D hh:mm:ss A", timeZoneName);
 
-			// Corresponding moment in this timezone
-			var thisTimezoneMoment = inputMoment.tz(_this.timezoneName);
+			// Corresponding moment in this timeZone
+			var thisTimeZoneMoment = inputMoment.tz(_this.timeZoneName);
 
 			clearInterval(timer);
-			_this.moment = thisTimezoneMoment;
+			_this.moment = thisTimeZoneMoment;
 
 			_this.vanillaDate = getVanillaDate();
         }
 	};
-	TimezoneObject.prototype.toString = function() {
+	TimeZoneObject.prototype.toString = function() {
 		return "NotImplemented";
 	}
 	
-    return TimezoneObject;
+    return TimeZoneObject;
 }]);
 
-app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject) {
+app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject) {
 	var clocksRunning = true;
 
-	var allTimezones = [new TimezoneObject(), new TimezoneObject("UTC")];
+	var allTimeZones = [new TimeZoneObject(), new TimeZoneObject("UTC")];
 
 	return {
-		allTimezones: function() {
-			return allTimezones;
+		allTimeZones: function() {
+			return allTimeZones;
 		},
-        addedTimezones: function() {
-            return allTimezones.slice(1);
+        addedTimeZones: function() {
+            return allTimeZones.slice(1);
         },
-		localTimezoneObject: function() {
-            return allTimezones[0];
+		localTimeZoneObject: function() {
+            return allTimeZones[0];
         },
-		// Removes the timezone at the specified index.
-		removeTimezone: function(index) {
-			allTimezones.splice(index, 1);
+		// Removes the timeZone at the specified index.
+		removeTimeZone: function(index) {
+			allTimeZones.splice(index, 1);
 		},
-		// Adds a new timezone object for the given timezone. If an object for the given timezone already exists,
+		// Adds a new timeZone object for the given timeZone. If an object for the given timeZone already exists,
 		// we just move the corresponding object to the top of the list.
-		addTimezone: function(timeZoneToBeAdded) {
-			var addedTimezones = this.addedTimezones();
-			var localTimezoneObject = this.localTimezoneObject();
-			console.log("We already have " + addedTimezones.length + " timezones and we are adding " + timeZoneToBeAdded);
+		addTimeZone: function(timeZoneToBeAdded) {
+			var addedTimeZones = this.addedTimeZones();
+			var localTimeZoneObject = this.localTimeZoneObject();
+			console.log("We already have " + addedTimeZones.length + " timeZones and we are adding " + timeZoneToBeAdded);
 
-			for (var i = 0; i < addedTimezones.length; i++) {
-				if(addedTimezones[i].timezoneName === timeZoneToBeAdded) {
+			for (var i = 0; i < addedTimeZones.length; i++) {
+				if(addedTimeZones[i].timeZoneName === timeZoneToBeAdded) {
 					console.log("Requested time zone already exists. Moving it to the top");
-					var timezoneObjectsToBeBubbledUp = addedTimezones.splice(i, 1);
-					addedTimezones = timezoneObjectsToBeBubbledUp.concat(addedTimezones);
-					allTimezones = [allTimezones[0]].concat(addedTimezones);
+					var timeZoneObjectsToBeBubbledUp = addedTimeZones.splice(i, 1);
+					addedTimeZones = timeZoneObjectsToBeBubbledUp.concat(addedTimeZones);
+					allTimeZones = [allTimeZones[0]].concat(addedTimeZones);
 					return;
 				}
 			}
 
-			var timezoneObjectToBeAdded = new TimezoneObject(timeZoneToBeAdded);
-			timezoneObjectToBeAdded.timerManager(clocksRunning);
+			var timeZoneObjectToBeAdded = new TimeZoneObject(timeZoneToBeAdded);
+			timeZoneObjectToBeAdded.timerManager(clocksRunning);
 
-			// If clocks are not running, new timezones being added shouldn't show the current time in that timezone.
-			// We should instead pick any of the existing clocks (we pick the local clock), convert the time to the new timezone and show it.
+			// If clocks are not running, new timeZones being added shouldn't show the current time in that timeZone.
+			// We should instead pick any of the existing clocks (we pick the local clock), convert the time to the new timeZone and show it.
 			if(!clocksRunning) {
-				if(addedTimezones.length > 0) {
-					timezoneObjectToBeAdded.setMoment(localTimezoneObject.vanillaDate, localTimezoneObject.timezoneName);
+				if(addedTimeZones.length > 0) {
+					timeZoneObjectToBeAdded.setMoment(localTimeZoneObject.vanillaDate, localTimeZoneObject.timeZoneName);
 				}
 			}
-			addedTimezones.push(timezoneObjectToBeAdded);
-			allTimezones = [allTimezones[0]].concat(addedTimezones);
+			addedTimeZones.push(timeZoneObjectToBeAdded);
+			allTimeZones = [allTimeZones[0]].concat(addedTimeZones);
 		},
 		stopClocks: function() {
 			clocksRunning = false;
-			for (var i = 0; i < allTimezones.length; i++) {
-				allTimezones[i].timerManager(clocksRunning);
+			for (var i = 0; i < allTimeZones.length; i++) {
+				allTimeZones[i].timerManager(clocksRunning);
 			}
 		}
     }
@@ -156,17 +156,17 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
             });
 
 			elem.on('change', function() {
-				var allTimezones = TimeZoneClocksManager.allTimezones();
-				console.log("A valid time was entered by the user: " + allTimezones[scope.index].vanillaDate + " at index: " + scope.index);
+				var allTimeZones = TimeZoneClocksManager.allTimeZones();
+				console.log("A valid time was entered by the user: " + allTimeZones[scope.index].vanillaDate + " at index: " + scope.index);
 
-				var editedDate = allTimezones[scope.index].vanillaDate;
-				var editedtimezone = allTimezones[scope.index].timezoneName;
+				var editedDate = allTimeZones[scope.index].vanillaDate;
+				var editedtimeZone = allTimeZones[scope.index].timeZoneName;
 
 				TimeZoneClocksManager.stopClocks();
-				for (var i = 0; i < allTimezones.length; i++) {
+				for (var i = 0; i < allTimeZones.length; i++) {
 					if(i != scope.index)
 					{
-						allTimezones[i].setMoment(editedDate, editedtimezone);
+						allTimeZones[i].setMoment(editedDate, editedtimeZone);
 					}
 				}
             });
@@ -187,7 +187,7 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 				autoSelectFirst: true,
 				onSelect: function (suggestion) {
 					var timeZoneToBeAdded = suggestion.value;
-					TimeZoneClocksManager.addTimezone(timeZoneToBeAdded);
+					TimeZoneClocksManager.addTimeZone(timeZoneToBeAdded);
 				},
 				onInvalidateSelection: function () {
 					console.log("Invalid Value");
@@ -198,10 +198,10 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 });
 
 app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager', function($scope, $interval, TimeZoneClocksManager) {
-	var localTimezoneObject = TimeZoneClocksManager.localTimezoneObject();
-	$scope.localTime = localTimezoneObject;
+	var localTimeZoneObject = TimeZoneClocksManager.localTimeZoneObject();
+	$scope.localTime = localTimeZoneObject;
 
-	$scope.allTimezones = TimeZoneClocksManager.allTimezones();
+	$scope.allTimeZones = TimeZoneClocksManager.allTimeZones();
 
 	// One of the timestamps was changed by the user.
 	$scope.timestampChanged = function(index) {
@@ -210,21 +210,21 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
     };
 
 	// A time zone is being removed.
-	$scope.removeTimezone = function(index) {
+	$scope.removeTimeZone = function(index) {
         console.log("Attempting to remove added clock at index " + index);
-		TimeZoneClocksManager.removeTimezone(index);
+		TimeZoneClocksManager.removeTimeZone(index);
     };
 
-	// Whenever the allTimezones list changes, update the UI.
-	$scope.$watch(function () { return TimeZoneClocksManager.allTimezones() }, function (newVal, oldVal) {
+	// Whenever the allTimeZones list changes, update the UI.
+	$scope.$watch(function () { return TimeZoneClocksManager.allTimeZones() }, function (newVal, oldVal) {
 		if (typeof newVal !== 'undefined') {
-			$scope.localTime = TimeZoneClocksManager.localTimezoneObject();
-			$scope.allTimezones = TimeZoneClocksManager.allTimezones();
+			$scope.localTime = TimeZoneClocksManager.localTimeZoneObject();
+			$scope.allTimeZones = TimeZoneClocksManager.allTimeZones();
 		}
 	});
 
 	$interval(function(){
-		$scope.localTime = localTimezoneObject;
+		$scope.localTime = localTimeZoneObject;
 	},1000);
 }]);
 
