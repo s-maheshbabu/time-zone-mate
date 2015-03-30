@@ -33,6 +33,7 @@
 		<li ng-repeat="addedTimezone in allTimezones" ng-if="$index > 0">
 		    <label> {{addedTimezone.timezoneName}} </label>
 			<input type="text" size=13 index="$index" ng-model="addedTimezone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
+			<input type="button" index="$index" ng-click="removeTimezone($index)" value="Remove">
 		</li>
 	</ol>
 

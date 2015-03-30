@@ -92,6 +92,10 @@ app.service('TimeZoneClocksManager', ['TimezoneObject', function(TimezoneObject)
 		localTimezoneObject: function() {
             return allTimezones[0];
         },
+		// Removes the timezone at the specified index.
+		removeTimezone: function(index) {
+			allTimezones.splice(index, 1);
+		},
 		// Adds a new timezone object for the given timezone. If an object for the given timezone already exists,
 		// we just move the corresponding object to the top of the list.
 		addTimezone: function(timeZoneToBeAdded) {
@@ -203,6 +207,12 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	$scope.timestampChanged = function(index) {
         console.log("User edited one of the timestamps. Stopping all clocks.");
 		TimeZoneClocksManager.stopClocks();
+    };
+
+	// A time zone is being removed.
+	$scope.removeTimezone = function(index) {
+        console.log("Attempting to remove added clock at index " + index);
+		TimeZoneClocksManager.removeTimezone(index);
     };
 
 	// Whenever the allTimezones list changes, update the UI.
