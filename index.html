@@ -23,6 +23,7 @@
     Local Time: 
 	<input type="text" index=0 name="localTime" size=13 ng-model="localTime.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
 	<input type="button" ng-click="resetAllClocks()" value="Reset">
+	<label ng-bind="localTime.moment"></label>
 	<br /><br />
 	
 	<hr />
@@ -35,6 +36,7 @@
 		    <label> {{addedTimeZone.timeZoneName}} </label>
 			<input type="text" size=13 index="$index" ng-model="addedTimeZone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
 			<input type="button" index="$index" ng-click="removeTimeZone($index)" value="Remove">
+			<label ng-bind="addedTimeZone.moment"></label>
 		</li>
 	</ol>
 
