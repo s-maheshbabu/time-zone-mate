@@ -178,10 +178,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 
 				TimeZoneClocksManager.stopClocks();
 				for (var i = 0; i < allTimeZones.length; i++) {
-					if(i != scope.index)
-					{
-						allTimeZones[i].setMoment(editedDate, editedtimeZone);
-					}
+					allTimeZones[i].setMoment(editedDate, editedtimeZone);
 				}
             });
 
