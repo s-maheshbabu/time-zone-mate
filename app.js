@@ -147,10 +147,21 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 			timeZoneObjectToBeAdded.timerManager(clocksRunning);
 
 			// If clocks are not running, new timeZones being added shouldn't show the current time in that timeZone.
-			// We should instead pick any of the existing clocks (we pick the local clock), convert the time to the new timeZone and show it.
+			// We should instead pick any of the valid existing clocks, convert the time to the new timeZone and show it.
+			// If all the clocks are invalid, we just set the new clock to its current time, in a stopped state.
 			if(!clocksRunning) {
 				if(allTimeZones.length > 0) {
-					timeZoneObjectToBeAdded.setMoment(localTimeZoneObject.vanillaDate, localTimeZoneObject.timeZoneName);
+					var aValidTimeZoneObject;
+					for (var i = 0; i < allTimeZones.length; i++) {
+						if(!allTimeZones[i].invalidTime) {
+							aValidTimeZoneObject = allTimeZones[i];
+							break;
+						}
+					}
+
+					if(aValidTimeZoneObject) {
+						timeZoneObjectToBeAdded.setMoment(aValidTimeZoneObject.vanillaDate, aValidTimeZoneObject.timeZoneName);
+					}
 				}
 			}
 			addedTimeZones.push(timeZoneObjectToBeAdded);
