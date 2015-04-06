@@ -69,6 +69,7 @@ app.factory('TimeZoneObject', [function() {
 		this.resetMoment = function () {
 			_this.moment = getMoment(timeZoneName);
 			_this.vanillaDate = getVanillaDate();
+			_this.invalidTime = false;
 			_this.timerManager(true);
 		};
 
