@@ -196,7 +196,6 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 
 				var allTimeZones = TimeZoneClocksManager.allTimeZones();
 				console.log("A valid time was entered by the user: " + allTimeZones[scope.index].vanillaDate + " at index: " + scope.index);
-				//attr.validtime = true;
 
 				var editedDate = allTimeZones[scope.index].vanillaDate;
 				var editedtimeZone = allTimeZones[scope.index].timeZoneName;
