@@ -149,7 +149,7 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 			// If clocks are not running, new timeZones being added shouldn't show the current time in that timeZone.
 			// We should instead pick any of the existing clocks (we pick the local clock), convert the time to the new timeZone and show it.
 			if(!clocksRunning) {
-				if(addedTimeZones.length > 0) {
+				if(allTimeZones.length > 0) {
 					timeZoneObjectToBeAdded.setMoment(localTimeZoneObject.vanillaDate, localTimeZoneObject.timeZoneName);
 				}
 			}
