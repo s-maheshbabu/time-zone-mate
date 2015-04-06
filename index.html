@@ -23,7 +23,8 @@
     Local Time: 
 	<input type="text" index=0 name="localTime" size=13 ng-model="localTime.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
 	<input type="button" ng-click="resetAllClocks()" value="Reset">
-	<label ng-bind="localTime.moment"></label>
+	<label ng-if="!localTime.invalidTime" ng-bind="localTime.moment"></label>
+	<label ng-if="localTime.invalidTime" style="color: #FF0000">Invalid Time</label>
 	<br /><br />
 	
 	<hr />
