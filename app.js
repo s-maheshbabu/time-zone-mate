@@ -18,6 +18,8 @@ app.factory('TimeZoneObject', [function() {
 		}
 		this.moment = getMoment(timeZoneName);
 		this.vanillaDate = getVanillaDate();
+		// A time zone object can be marked invalid, when the user enters an invalid timestamp.
+		this.invalidTime = false;
 
 		var timer = null;
 		// Control the timer. If set to true, timers will be triggered. If set to false, any existing timers will be stopped.
@@ -34,6 +36,14 @@ app.factory('TimeZoneObject', [function() {
 			}
 		};
 		this.timerManager(true);
+
+		this.markAsInvalid = function() {
+			this.invalidTime = true;
+		}
+
+		this.markAsValid = function() {
+			this.invalidTime = false;
+		}
 
 		function getVanillaDate() {
 			var m = _this.moment;
@@ -104,10 +114,16 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 			allTimeZones.splice(index, 1);
 		},
 		// Resets each time zone object to current time and set the clocks to start running.
-		resetAllClocks: function(index) {
+		resetAllClocks: function() {
 			for (var i = 0; i < allTimeZones.length; i++) {
 				allTimeZones[i].resetMoment();
 				clocksRunning = true;
+			}
+		},
+		// Mark all of the timezone objects as valid.
+		markAllClocksValid: function() {
+			for (var i = 0; i < allTimeZones.length; i++) {
+				allTimeZones[i].markAsValid();
 			}
 		},
 		// Adds a new timeZone object for the given timeZone. If an object for the given timeZone already exists,
@@ -164,14 +180,23 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
             index: '=index'
         },
         link: function(scope, elem, attr) {
+			// Initialize the timepicker.
+			elem.timepicker();
 
 			elem.on('changeTime', function() {
-                // console.log("Time picker is ticking");
+                // This event is triggered only when a valid timestamp is entered by user. So set it as a valid time.
+				attr.validtime = true;
             });
 
 			elem.on('change', function() {
+				if(attr.validtime == false) {
+					console.log("Returning right away because we currently hold an invalid time " + elem.val());
+					return;
+				}
+
 				var allTimeZones = TimeZoneClocksManager.allTimeZones();
 				console.log("A valid time was entered by the user: " + allTimeZones[scope.index].vanillaDate + " at index: " + scope.index);
+				//attr.validtime = true;
 
 				var editedDate = allTimeZones[scope.index].vanillaDate;
 				var editedtimeZone = allTimeZones[scope.index].timeZoneName;
@@ -180,10 +205,27 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 				for (var i = 0; i < allTimeZones.length; i++) {
 					allTimeZones[i].setMoment(editedDate, editedtimeZone);
 				}
+				TimeZoneClocksManager.markAllClocksValid();
             });
 
 			elem.on('timeFormatError', function() {
-                console.log("Invalid timepicker value");
+				var invalidValueEnteredByUser = elem.val();
+                console.log("Invalid timepicker value entered by user: " + invalidValueEnteredByUser);
+
+				// This is a hack.
+				// If a user changes the timestamp from 7PM to 7** to 7PM, the timepicker doesn't trigger a 'changeTime'
+				// event. So we mark the clock as invalid when user enters 7** but never get a chance to mark it as valid
+				// when user changes it back to 7PM. So, we artificially set the time to the following moment and then set
+				// it back to whatever value the user entered.
+				// This hack will break if the user actually was at the following moment before entering an invalid value
+				// which is very unlikely.
+				elem.timepicker('setTime', new Date(5555, 5, 5, 5, 5, 5, 5));
+				elem.val(invalidValueEnteredByUser);
+
+				// Mark current timestamp as invalid.
+				attr.validtime = false;
+				var allTimeZones = TimeZoneClocksManager.allTimeZones();
+				allTimeZones[scope.index].markAsInvalid();
             });
 		}
     };
@@ -226,7 +268,7 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 		TimeZoneClocksManager.removeTimeZone(index);
     };
 
-	// A time zone is being removed.
+	// All clocks being reset.
 	$scope.resetAllClocks = function() {
         console.log("All clocks are being reset to the current time");
 		TimeZoneClocksManager.resetAllClocks();
