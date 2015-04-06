@@ -73,6 +73,16 @@ app.factory('TimeZoneObject', [function() {
 			_this.timerManager(true);
 		};
 
+		// Marks <code>this</code> time zone object as invalid and stops the timers.
+		this.destroyMoment = function () {
+			_this.moment = null;
+			_this.vanillaDate = null;
+			_this.invalidTime = true;
+			_this.timerManager(false);
+
+			delete _this;
+		};
+
 		// Given a date and timeZone, sets the moment to the corresponding moment in this timeZone.
 		// If <code>this</code> is a PST timeZone object and if the input is 2 AM IST, the moment will
 		// be set to whatever the time is in PST when it is 2 AM IST.
@@ -89,7 +99,7 @@ app.factory('TimeZoneObject', [function() {
         }
 	};
 	TimeZoneObject.prototype.toString = function() {
-		return "NotImplemented";
+		return "ToString on TimeZoneObject NotImplemented";
 	}
 	
     return TimeZoneObject;
@@ -112,7 +122,11 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
         },
 		// Removes the timeZone at the specified index.
 		removeTimeZone: function(index) {
-			allTimeZones.splice(index, 1);
+			var removedElements = allTimeZones.splice(index, 1);
+			for(var i = 0; i < removedElements.length; i++)
+			{
+				removedElements[i].destroyMoment();
+			}
 		},
 		// Resets each time zone object to current time and set the clocks to start running.
 		resetAllClocks: function() {
@@ -180,7 +194,7 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 app.factory('TimeZoneAutoCompleteService', [function() {
     return {
         getSource: function() {
-            return ['Asia/Kolkata', 'Africa/Cairo', 'America/Chicago', 'Australia/Darwin', 'Pacific/Guam'];
+            return ['mahesh', 'Asia/Kolkata', 'Africa/Cairo', 'America/Chicago', 'Australia/Darwin', 'Pacific/Guam'];
         }
     }
 }]);
