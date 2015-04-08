@@ -192,9 +192,22 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 }]);
 	
 app.factory('TimeZoneAutoCompleteService', [function() {
+	var locationsToTimeZones = [['India', 'Asia/Kolkata'], ['Cairo', 'Africa/Cairo'], ['Chicago', 'America/Chicago'], ['Darwin', 'Australia/Darwin'], ['Guam', 'Pacific/Guam'], ['Invalid Entry', 'Invalid Time Zone']];
     return {
-        getSource: function() {
-            return ['mahesh', 'Asia/Kolkata', 'Africa/Cairo', 'America/Chicago', 'Australia/Darwin', 'Pacific/Guam'];
+        getLocations: function() {
+			var locations = new Array();
+			for(var i = 0; i < locationsToTimeZones.length; i++) {
+				locations[i] = locationsToTimeZones[i][0];
+			}
+			return locations;
+        },
+        getTimeZone: function(timeZoneKey) {
+			for(var i = 0; i < locationsToTimeZones.length; i++) {
+				if(locationsToTimeZones[i][0] == timeZoneKey) {
+					return locationsToTimeZones[i][1];
+				}
+			}
+			throw "An unexpected error. Time zone for the requested location " + timeZoneKey + " is not known.";
         }
     }
 }]);
@@ -261,11 +274,11 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
         restrict: 'A',
         link: function(scope, elem, attr, ctrl) {
             elem.autocomplete({
-				lookup: TimeZoneAutoCompleteService.getSource(),
+				lookup: TimeZoneAutoCompleteService.getLocations(),
 				autoSelectFirst: true,
 				onSelect: function (suggestion) {
-					var timeZoneToBeAdded = suggestion.value;
-					TimeZoneClocksManager.addTimeZone(timeZoneToBeAdded);
+					var locationToBeAdded = suggestion.value;
+					TimeZoneClocksManager.addTimeZone(TimeZoneAutoCompleteService.getTimeZone(locationToBeAdded));
 				},
 				onInvalidateSelection: function () {
 					console.log("Invalid Value");
