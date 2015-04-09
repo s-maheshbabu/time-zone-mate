@@ -20,7 +20,7 @@ app.factory('TimeZoneObject', [function() {
 			this.title = 'Local Time';
 			this.timeZoneName = jstz.determine().name();
 		}
-		if(!title)
+		if(!this.title)
 		{
 			this.title = timeZoneName;
 		}
