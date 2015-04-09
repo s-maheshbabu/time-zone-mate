@@ -7,14 +7,22 @@ angular.module('ui.timepicker').value('uiTimepickerConfig',{
 });
 
 app.factory('TimeZoneObject', [function() {
-	function TimeZoneObject(timeZoneName)
+	function TimeZoneObject(timeZoneName, title)
 	{
 		var _this = this;
 
-		this.timeZoneName=timeZoneName;
+		// The title of the time zone to be displayed. This can be any value but usually used to hold
+		// a user friendly name to identify a time zone like a city, country etc.
+		this.title = title;
+		this.timeZoneName = timeZoneName;
 		if(!timeZoneName)
 		{
+			this.title = 'Local Time';
 			this.timeZoneName = jstz.determine().name();
+		}
+		if(!title)
+		{
+			this.title = timeZoneName;
 		}
 		this.moment = getMoment(timeZoneName);
 		this.vanillaDate = getVanillaDate();
@@ -108,7 +116,7 @@ app.factory('TimeZoneObject', [function() {
 app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject) {
 	var clocksRunning = true;
 
-	var allTimeZones = [new TimeZoneObject(), new TimeZoneObject("UTC")];
+	var allTimeZones = [new TimeZoneObject(), new TimeZoneObject('UTC')];
 
 	return {
 		allTimeZones: function() {
@@ -143,7 +151,9 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 		},
 		// Adds a new timeZone object for the given timeZone. If an object for the given timeZone already exists,
 		// we just move the corresponding object to the top of the list.
-		addTimeZone: function(timeZoneToBeAdded) {
+		// The title can be any value but is usually used to contain a user friendly name to identify the time zone
+		// like a city name, country name etc. If missing, the time zone name will be used as title.
+		addTimeZone: function(timeZoneToBeAdded, titleOfTheTimeZone) {
 			var addedTimeZones = this.addedTimeZones();
 			var localTimeZoneObject = this.localTimeZoneObject();
 			console.log("We already have " + addedTimeZones.length + " timeZones and we are adding " + timeZoneToBeAdded);
@@ -158,7 +168,7 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 				}
 			}
 
-			var timeZoneObjectToBeAdded = new TimeZoneObject(timeZoneToBeAdded);
+			var timeZoneObjectToBeAdded = new TimeZoneObject(timeZoneToBeAdded, titleOfTheTimeZone);
 			timeZoneObjectToBeAdded.timerManager(clocksRunning);
 
 			// If clocks are not running, new timeZones being added shouldn't show the current time in that timeZone.
@@ -281,7 +291,7 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 				autoSelectFirst: true,
 				onSelect: function (suggestion) {
 					var locationToBeAdded = suggestion.value;
-					TimeZoneClocksManager.addTimeZone(TimeZoneAutoCompleteService.getTimeZone(locationToBeAdded));
+					TimeZoneClocksManager.addTimeZone(TimeZoneAutoCompleteService.getTimeZone(locationToBeAdded), locationToBeAdded);
 				},
 				onInvalidateSelection: function () {
 					console.log("Invalid Value");
