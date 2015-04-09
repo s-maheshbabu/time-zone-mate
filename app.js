@@ -287,6 +287,8 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
         restrict: 'A',
         link: function(scope, elem, attr, ctrl) {
             elem.autocomplete({
+				lookupLimit: 10,
+				triggerSelectOnValidInput: false,
 				lookup: TimeZoneAutoCompleteService.getLocations(),
 				autoSelectFirst: true,
 				onSelect: function (suggestion) {
