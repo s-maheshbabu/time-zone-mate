@@ -9,11 +9,14 @@
 
 <script src="jquery.autocomplete.js"></script>
 
+<script src="ui-bootstrap-tpls-0.12.1.min.js"></script>
 <script src="jquery.timepicker.min.js"></script>
 <script src="timepickerdirective.min.js"></script>
 
 <script src="moment.min.js"></script>
 <script src="moment-timezone-with-data.min.js"></script>
+
+<link href='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' rel="stylesheet"/>
 
 <script src="app.js"></script>
 </head>
@@ -21,7 +24,20 @@
 <body>
 <div ng-controller="ClockController">
     <label> {{localTime.title}} </label>
-	<input type="text" index=0 name="localTime" size=13 ng-model="localTime.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
+	<input type="text" index=0 name="localTime" size=13 ng-model="localTime.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events />
+
+	<div class="row">
+		<div class="col-md-6">
+			  <p class="input-group">
+				<input readonly type="text" size=13 ng-change="dateChanged(0)" class="form-control" datepicker-popup="{{format}}" ng-model="localTime.datePart"
+						is-open="localTime.editMode" datepicker-options=dateOptions ng-required="true" show-button-bar="false" />
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+				</span>
+			</p>
+		</div>
+	</div>
+
 	<input type="button" ng-click="resetAllClocks()" value="Reset">
 	<br/>
 	<label> {{localTime.timeZoneName}} </label>
@@ -37,6 +53,19 @@
 		<li ng-repeat="addedTimeZone in allTimeZones" ng-if="$index > 0">
 		    <label> {{addedTimeZone.title}} </label>
 			<input type="text" validtime=true size=13 index="$index" ng-model="addedTimeZone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
+
+			<div class="row">
+				<div class="col-md-6">
+					  <p class="input-group">
+						<input readonly type="text" size=13 ng-change="dateChanged($index)" class="form-control" datepicker-popup="{{format}}" ng-model="addedTimeZone.datePart"
+								is-open="addedTimeZone.editMode" datepicker-options="dateOptions" ng-required="true" show-button-bar="false" />
+						<span class="input-group-btn">
+							<button type="button" class="btn btn-default" ng-click="open($event, $index)"><i class="glyphicon glyphicon-calendar"></i></button>
+						</span>
+					</p>
+				</div>
+			</div>
+
 			<input type="button" index="$index" ng-click="removeTimeZone($index)" value="Remove">
 			<br />
 			<label> {{addedTimeZone.timeZoneName}} </label>

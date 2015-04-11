@@ -1,5 +1,5 @@
 (function ClockController() {
-var app = angular.module('clock', ['ui.timepicker']);
+var app = angular.module('clock', ['ui.timepicker', 'ui.bootstrap']);
 
 angular.module('ui.timepicker').value('uiTimepickerConfig',{
   showOnFocus: false,
@@ -29,6 +29,9 @@ app.factory('TimeZoneObject', [function() {
 		// A time zone object can be marked invalid, when the user enters an invalid timestamp.
 		this.invalidTime = false;
 
+		this.datePart = getDatePart();
+		this.editMode = false;
+
 		var timer = null;
 		// Control the timer. If set to true, timers will be triggered. If set to false, any existing timers will be stopped.
 		this.timerManager = function (flag) {
@@ -53,15 +56,19 @@ app.factory('TimeZoneObject', [function() {
 			this.invalidTime = false;
 		}
 
+		this.setEditMode = function(editMode) {
+			this.editMode = editMode;
+		}
+
 		function getVanillaDate() {
 			var m = _this.moment;
 			return new Date(m.year(), m.month(), m.date(),  m.hours(), m.minutes(), m.seconds());
 		};
 
-		this.setVanillaDate = function (date) {
-			clearInterval(timer);
-			this.vanillaDate = date;
-		}
+		function getDatePart() {
+			var m = _this.moment;
+			return new Date(m.year(), m.month(), m.date(), 0, 0, 0);
+		};
 
 		function getMoment(timeZone) {
 			var time = moment();
@@ -104,6 +111,7 @@ app.factory('TimeZoneObject', [function() {
 			_this.moment = thisTimeZoneMoment;
 
 			_this.vanillaDate = getVanillaDate();
+			_this.datePart = getDatePart();
         }
 	};
 	TimeZoneObject.prototype.toString = function() {
@@ -142,6 +150,37 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 				allTimeZones[i].resetMoment();
 				clocksRunning = true;
 			}
+		},
+		// Set the clock at the given index in edit mode. Since only one clock can be edited at
+		// a time, we set all other clocks to read only mode just to be safe.
+		// We also stop all clocks when one of them enters edit mode.
+		setInEditMode: function(index) {
+			for (var i = 0; i < allTimeZones.length; i++) {
+				if(i == index) {
+					allTimeZones[i].setEditMode(true);
+				}
+				else {
+					allTimeZones[i].setEditMode(false);
+				}
+			}
+			this.stopClocks();
+		},
+		// Use the clock at the given index as the authoritative source and adjust all other clocks to
+		// show the same moment as the clock at given index.
+		adjustAllClocks: function(index) {
+			console.log("A valid time was entered by the user: " + allTimeZones[index].vanillaDate + " at index: " + index);
+
+			var editedDate = allTimeZones[index].vanillaDate;
+			var editedDatePart = allTimeZones[index].datePart;
+			var editedtimeZone = allTimeZones[index].timeZoneName;
+
+			var compositeDate = new Date(editedDatePart.getFullYear(), editedDatePart.getMonth(), editedDatePart.getDate(), editedDate.getHours(), editedDate.getMinutes(), editedDate.getSeconds(), editedDate.getMilliseconds());
+
+			this.stopClocks();
+			for (var i = 0; i < allTimeZones.length; i++) {
+				allTimeZones[i].setMoment(compositeDate, editedtimeZone);
+			}
+			this.markAllClocksValid();
 		},
 		// Mark all of the timezone objects as valid.
 		markAllClocksValid: function() {
@@ -246,17 +285,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 					return;
 				}
 
-				var allTimeZones = TimeZoneClocksManager.allTimeZones();
-				console.log("A valid time was entered by the user: " + allTimeZones[scope.index].vanillaDate + " at index: " + scope.index);
-
-				var editedDate = allTimeZones[scope.index].vanillaDate;
-				var editedtimeZone = allTimeZones[scope.index].timeZoneName;
-
-				TimeZoneClocksManager.stopClocks();
-				for (var i = 0; i < allTimeZones.length; i++) {
-					allTimeZones[i].setMoment(editedDate, editedtimeZone);
-				}
-				TimeZoneClocksManager.markAllClocksValid();
+				TimeZoneClocksManager.adjustAllClocks(scope.index);
             });
 
 			elem.on('timeFormatError', function() {
@@ -334,6 +363,19 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 			$scope.allTimeZones = TimeZoneClocksManager.allTimeZones();
 		}
 	});
+
+	$scope.open = function($event, index) {
+		console.log("Datepicker button clicked at index: " + index + ". Setting it in edit mode and stopping all clocks.");
+		$event.preventDefault();
+		$event.stopPropagation();
+
+		TimeZoneClocksManager.setInEditMode(index);
+	};
+
+	$scope.dateChanged = function(index) {
+		console.log("User changed the data on clock at index: " + index + ". Adjust time across all clocks.");
+		TimeZoneClocksManager.adjustAllClocks(index);
+	};
 
 	$interval(function(){
 		$scope.localTime = localTimeZoneObject;
