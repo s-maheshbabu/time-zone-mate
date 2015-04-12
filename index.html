@@ -24,7 +24,7 @@
 <body>
 <div ng-controller="ClockController">
     <label> {{localTime.title}} </label>
-	<input type="text" index=0 name="localTime" size=13 ng-model="localTime.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events />
+	<input type="text" index=0 name="localTime" size=13 ng-model="localTime.timePart" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events />
 
 	<div class="row">
 		<div class="col-md-6">
@@ -52,7 +52,7 @@
 	<ol>
 		<li ng-repeat="addedTimeZone in allTimeZones" ng-if="$index > 0">
 		    <label> {{addedTimeZone.title}} </label>
-			<input type="text" validtime=true size=13 index="$index" ng-model="addedTimeZone.vanillaDate" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
+			<input type="text" validtime=true size=13 index="$index" ng-model="addedTimeZone.timePart" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
 
 			<div class="row">
 				<div class="col-md-6">

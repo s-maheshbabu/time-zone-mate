@@ -25,7 +25,7 @@ app.factory('TimeZoneObject', [function() {
 			this.title = timeZoneName;
 		}
 		this.moment = getMoment(timeZoneName);
-		this.vanillaDate = getVanillaDate();
+		this.timePart = getTimePart();
 		// A time zone object can be marked invalid, when the user enters an invalid timestamp.
 		this.invalidTime = false;
 
@@ -39,7 +39,7 @@ app.factory('TimeZoneObject', [function() {
 				clearInterval(timer);
 				timer =  setInterval(function() {
 					_this.moment = getMoment(timeZoneName);
-					_this.vanillaDate = getVanillaDate();
+					_this.timePart = getTimePart();
 				}, 1000);
 			}
 			else {
@@ -60,7 +60,7 @@ app.factory('TimeZoneObject', [function() {
 			this.editMode = editMode;
 		}
 
-		function getVanillaDate() {
+		function getTimePart() {
 			var m = _this.moment;
 			return new Date(m.year(), m.month(), m.date(),  m.hours(), m.minutes(), m.seconds());
 		};
@@ -83,7 +83,7 @@ app.factory('TimeZoneObject', [function() {
 		// Resets <code>this</code> time zone object to current time and starts the timers.
 		this.resetMoment = function () {
 			_this.moment = getMoment(timeZoneName);
-			_this.vanillaDate = getVanillaDate();
+			_this.timePart = getTimePart();
 			_this.datePart = getDatePart();
 			_this.invalidTime = false;
 			_this.timerManager(true);
@@ -92,7 +92,7 @@ app.factory('TimeZoneObject', [function() {
 		// Marks <code>this</code> time zone object as invalid and stops the timers.
 		this.destroyMoment = function () {
 			_this.moment = null;
-			_this.vanillaDate = null;
+			_this.timePart = null;
 			_this.invalidTime = true;
 			_this.timerManager(false);
 
@@ -111,12 +111,12 @@ app.factory('TimeZoneObject', [function() {
 			clearInterval(timer);
 			_this.moment = thisTimeZoneMoment;
 
-			_this.vanillaDate = getVanillaDate();
+			_this.timePart = getTimePart();
 			_this.datePart = getDatePart();
         }
 	};
 	TimeZoneObject.prototype.toString = function() {
-		return "ToString on TimeZoneObject NotImplemented";
+		return "Moment: " + this.moment.toString() + ". TimeZone: " + this.timeZoneName + ". [DatePart: " + this.datePart.toDateString() + "] and [TimePart: " + this.timePart.toTimeString() + "].";
 	}
 	
     return TimeZoneObject;
@@ -169,12 +169,11 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 		// Use the clock at the given index as the authoritative source and adjust all other clocks to
 		// show the same moment as the clock at given index.
 		adjustAllClocks: function(index) {
-			console.log("A valid time was entered by the user: " + allTimeZones[index].vanillaDate + " at index: " + index);
-
-			var editedDate = allTimeZones[index].vanillaDate;
+			var editedDate = allTimeZones[index].timePart;
 			var editedDatePart = allTimeZones[index].datePart;
 			var editedtimeZone = allTimeZones[index].timeZoneName;
 
+			console.log('Adjusting all clocks to match - ' + allTimeZones[index].toString());
 			var compositeDate = new Date(editedDatePart.getFullYear(), editedDatePart.getMonth(), editedDatePart.getDate(), editedDate.getHours(), editedDate.getMinutes(), editedDate.getSeconds(), editedDate.getMilliseconds());
 
 			this.stopClocks();
@@ -225,7 +224,7 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 					}
 
 					if(aValidTimeZoneObject) {
-						timeZoneObjectToBeAdded.setMoment(aValidTimeZoneObject.vanillaDate, aValidTimeZoneObject.timeZoneName);
+						timeZoneObjectToBeAdded.setMoment(aValidTimeZoneObject.timePart, aValidTimeZoneObject.timeZoneName);
 					}
 				}
 			}
@@ -286,6 +285,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 					return;
 				}
 
+				console.log("A valid time was entered by the user: " + elem.val() + " at index: " + scope.index);
 				TimeZoneClocksManager.adjustAllClocks(scope.index);
             });
 
