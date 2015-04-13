@@ -11,80 +11,11 @@ app.factory('TimeZoneObject', [function() {
 	{
 		var _this = this;
 
-		// The title of the time zone to be displayed. This can be any value but usually used to hold
-		// a user friendly name to identify a time zone like a city, country etc.
-		this.title = title;
-		this.timeZoneName = timeZoneName;
-		if(!timeZoneName)
-		{
-			this.title = 'Local Time';
-			this.timeZoneName = jstz.determine().name();
-		}
-		if(!this.title)
-		{
-			this.title = timeZoneName;
-		}
-		this.moment = getMoment(timeZoneName);
-		this.timePart = getTimePart();
-		// A time zone object can be marked invalid, when the user enters an invalid timestamp.
-		this.invalidTime = false;
-
-		this.datePart = getDatePart();
-		this.editMode = false;
-
-		var timer = null;
-		// Control the timer. If set to true, timers will be triggered. If set to false, any existing timers will be stopped.
-		this.timerManager = function (flag) {
-			if(flag) {
-				clearInterval(timer);
-				timer =  setInterval(function() {
-					_this.moment = getMoment(timeZoneName);
-					_this.timePart = getTimePart();
-				}, 1000);
-			}
-			else {
-				clearInterval(timer);
-			}
-		};
-		this.timerManager(true);
-
-		this.markAsInvalid = function() {
-			this.invalidTime = true;
-		}
-
-		this.markAsValid = function() {
-			this.invalidTime = false;
-		}
-
-		this.setEditMode = function(editMode) {
-			this.editMode = editMode;
-		}
-
-		function getTimePart() {
-			var m = _this.moment;
-			return new Date(m.year(), m.month(), m.date(),  m.hours(), m.minutes(), m.seconds());
-		};
-
-		function getDatePart() {
-			var m = _this.moment;
-			return new Date(m.year(), m.month(), m.date(), 0, 0, 0);
-		};
-
-		function getMoment(timeZone) {
-			var time = moment();
-
-			if(timeZone) {
-				time.tz(timeZone);
-			}
-			
-			return time;
-		};
-
 		// Resets <code>this</code> time zone object to current time and starts the timers.
 		this.resetMoment = function () {
 			_this.moment = getMoment(timeZoneName);
-			_this.timePart = getTimePart();
-			_this.datePart = getDatePart();
+			_this.timePart = _this.getTimePart();
+			_this.datePart = _this.getDatePart();
 			_this.invalidTime = false;
 			_this.timerManager(true);
 		};
@@ -111,9 +42,79 @@ app.factory('TimeZoneObject', [function() {
 			clearInterval(timer);
 			_this.moment = thisTimeZoneMoment;
 
-			_this.timePart = getTimePart();
-			_this.datePart = getDatePart();
+			_this.timePart = _this.getTimePart();
+			_this.datePart = _this.getDatePart();
         }
+
+		this.markAsInvalid = function() {
+			this.invalidTime = true;
+		}
+
+		this.markAsValid = function() {
+			this.invalidTime = false;
+		}
+
+		this.setEditMode = function(editMode) {
+			this.editMode = editMode;
+		}
+
+		this.getTimePart = function () {
+			var m = _this.moment;
+			return new Date(m.year(), m.month(), m.date(),  m.hours(), m.minutes(), m.seconds());
+		};
+
+		this.getDatePart = function () {
+			var m = _this.moment;
+			return new Date(m.year(), m.month(), m.date(), 0, 0, 0);
+		};
+
+		// The title of the time zone to be displayed. This can be any value but usually used to hold
+		// a user friendly name to identify a time zone like a city, country etc.
+		this.title = title;
+		this.timeZoneName = timeZoneName;
+		if(!timeZoneName)
+		{
+			this.title = 'Local Time';
+			this.timeZoneName = jstz.determine().name();
+		}
+		if(!this.title)
+		{
+			this.title = timeZoneName;
+		}
+		this.moment = getMoment(timeZoneName);
+		// A time zone object can be marked invalid, when the user enters an invalid timestamp.
+		this.invalidTime = false;
+
+		this.timePart = this.getTimePart();
+		this.datePart = this.getDatePart();
+		this.editMode = false;
+
+		var timer = null;
+		// Control the timer. If set to true, timers will be triggered. If set to false, any existing timers will be stopped.
+		this.timerManager = function (flag) {
+			if(flag) {
+				clearInterval(timer);
+				timer =  setInterval(function() {
+					_this.moment = getMoment(timeZoneName);
+					_this.timePart = _this.getTimePart();
+					_this.datePart = _this.getDatePart();
+				}, 1000);
+			}
+			else {
+				clearInterval(timer);
+			}
+		};
+		this.timerManager(true);
+
+		function getMoment(timeZone) {
+			var time = moment();
+
+			if(timeZone) {
+				time.tz(timeZone);
+			}
+			
+			return time;
+		};
 	};
 	TimeZoneObject.prototype.toString = function() {
 		return "Moment: " + this.moment.toString() + ". TimeZone: " + this.timeZoneName + ". [DatePart: " + this.datePart.toDateString() + "] and [TimePart: " + this.timePart.toTimeString() + "].";
@@ -169,11 +170,12 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 		// Use the clock at the given index as the authoritative source and adjust all other clocks to
 		// show the same moment as the clock at given index.
 		adjustAllClocks: function(index) {
-			var editedDate = allTimeZones[index].timePart;
-			var editedDatePart = allTimeZones[index].datePart;
-			var editedtimeZone = allTimeZones[index].timeZoneName;
+			var pivotClock = allTimeZones[index];
+			var editedDate = pivotClock.timePart;
+			var editedDatePart = pivotClock.datePart;
+			var editedtimeZone = pivotClock.timeZoneName;
 
-			console.log('Adjusting all clocks to match - ' + allTimeZones[index].toString());
+			console.log('Adjusting all clocks to match - ' + pivotClock.toString());
 			var compositeDate = new Date(editedDatePart.getFullYear(), editedDatePart.getMonth(), editedDatePart.getDate(), editedDate.getHours(), editedDate.getMinutes(), editedDate.getSeconds(), editedDate.getMilliseconds());
 
 			this.stopClocks();
@@ -224,7 +226,11 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 					}
 
 					if(aValidTimeZoneObject) {
-						timeZoneObjectToBeAdded.setMoment(aValidTimeZoneObject.timePart, aValidTimeZoneObject.timeZoneName);
+						var datePart = aValidTimeZoneObject.getDatePart();
+						var timePart = aValidTimeZoneObject.getTimePart();
+						var compositeDate = new Date(datePart.getFullYear(), datePart.getMonth(), datePart.getDate(), timePart.getHours(), timePart.getMinutes(), timePart.getSeconds(), timePart.getMilliseconds());
+
+						timeZoneObjectToBeAdded.setMoment(compositeDate, aValidTimeZoneObject.timeZoneName);
 					}
 				}
 			}
