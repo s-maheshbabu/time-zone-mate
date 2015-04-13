@@ -321,6 +321,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneClocksManager) {
     return {
         restrict: 'A',
+        scope: false,
         link: function(scope, elem, attr, ctrl) {
             elem.autocomplete({
 				lookupLimit: 10,
@@ -328,12 +329,20 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 				lookup: TimeZoneAutoCompleteService.getLocations(),
 				autoSelectFirst: true,
 				onSelect: function (suggestion) {
+					scope.timeZoneBeingAddedIsValid = true;
+
 					var locationToBeAdded = suggestion.value;
 					TimeZoneClocksManager.addTimeZone(TimeZoneAutoCompleteService.getTimeZone(locationToBeAdded), locationToBeAdded);
-				},
-				onInvalidateSelection: function () {
-					console.log("Invalid Value");
 				}
+            });
+
+			elem.on('change', function() {
+				console.log("User trying to add a time zone. Value changed to " + elem.val());
+
+				// We set it to false blindly because 'onSelect' event is triggered after 'onChange' and
+				// if the user's input happens to be a valid one, we will set it to true in the handling
+				// logic for 'onSelect' event.
+				scope.timeZoneBeingAddedIsValid = false;
             });
         }
     };
@@ -344,6 +353,9 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	$scope.localTime = localTimeZoneObject;
 
 	$scope.allTimeZones = TimeZoneClocksManager.allTimeZones();
+
+	// Determines the state of the time zone entry being made by the user.
+	$scope.timeZoneBeingAddedIsValid = true;
 
 	// One of the timestamps was changed by the user.
 	$scope.timestampChanged = function(index) {

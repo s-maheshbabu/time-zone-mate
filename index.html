@@ -17,66 +17,95 @@
 <script src="moment-timezone-with-data.min.js"></script>
 
 <link href='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' rel="stylesheet"/>
+<link rel="stylesheet" type="text/css" href="css/app.css">
 
 <script src="app.js"></script>
 </head>
 
 <body>
 <div ng-controller="ClockController">
-    <label> {{localTime.title}} </label>
-	
-	<div class="row">
-		<div class="col-md-6">
-			  <p class="input-group">
-			    <input type="text" index=0 name="localTime" size=13 class="form-control" ng-model="localTime.timePart" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events />
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<label> {{localTime.title}} </label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<p class="input-group">
+					<input type="text" index=0 name="localTime" class="form-control" ng-model="localTime.timePart" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events />
+					<span class="input-group-btn">
+						<button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+					</span>
+					<input readonly type="text" class="form-control" ng-change="dateChanged(0)" ng-model="localTime.datePart"
+							is-open="localTime.editMode" ng-required="true" datepicker-popup="yyyy-MM-dd" show-button-bar="false" />
+				</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3 ">
+				<label> {{localTime.timeZoneName}}:  </label>
+				<label ng-if="!localTime.invalidTime" ng-bind="localTime.moment"></label>
+				<label ng-if="localTime.invalidTime" style="color: #FF0000">Invalid Time</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-2 col-md-offset-5">
 				<span class="input-group-btn">
-					<button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
-				</span>			  
-				<input readonly type="text" class="form-control" ng-change="dateChanged(0)" ng-model="localTime.datePart"
-						is-open="localTime.editMode" ng-required="true" datepicker-popup="yyyy-MM-dd" show-button-bar="false" />
-			</p>
+					<button type="button" class="btn btn-default" ng-click="resetAllClocks()">Reset</button>
+				</span>
+			</div>
 		</div>
 	</div>
-	
-	<label> {{localTime.timeZoneName}} </label>
-	<label ng-if="!localTime.invalidTime" ng-bind="localTime.moment"></label>
-	<label ng-if="localTime.invalidTime" style="color: #FF0000">Invalid Time</label>
-	<br />
-	<input type="button" ng-click="resetAllClocks()" value="Reset">
-	<br />
-	
-	<hr />
-	<input type="text" name="timeZoneToBeAdded" size=13 ng-model="timeZoneToBeAdded" auto-complete>
-	<br /><br />
-	
-	<ol>
-		<li ng-repeat="addedTimeZone in allTimeZones" ng-if="$index > 0">
-		    <label> {{addedTimeZone.title}} </label>
 
-			<div class="row">
-				<div class="col-md-6">
-					  <p class="input-group">
-					  	<input type="text" validtime=true size=13 class="form-control" index="$index" ng-model="addedTimeZone.timePart" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
-						<span class="input-group-btn">
-							<button type="button" class="btn btn-default" ng-click="open($event, $index)"><i class="glyphicon glyphicon-calendar"></i></button>
-						</span>
-						<input readonly type="text" class="form-control" ng-change="dateChanged($index)" ng-model="addedTimeZone.datePart"
-								is-open="addedTimeZone.editMode" ng-required="true" datepicker-popup="yyyy-MM-dd" show-button-bar="false" />
-						<span class="input-group-btn">
-						<button type="button" class="btn btn-default" index="$index" ng-click="removeTimeZone($index)">Remove</button>
-						</span>
-					</p>
+	<hr />
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4 col-md-offset-4" ng-class="{'has-error':!timeZoneBeingAddedIsValid}">
+				<input type="text" class="form-control" placeholder="Try New York, India, PST, America/Los_Angeles etc." name="timeZoneToBeAdded" ng-model="timeZoneToBeAdded" auto-complete>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3" ng-hide="timeZoneBeingAddedIsValid">
+				<label class="center-block text-danger text-center error-message"><i> Sorry, that time zone is not supported. Click here if you think it should be supported. </i></label>
+			</div>
+		</div>
+	</div>
+	<hr />
+
+	<ol class="list-group">
+		<li class="list-group-item" ng-repeat="addedTimeZone in allTimeZones" ng-if="$index > 0">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<label> {{addedTimeZone.title}} </label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<p class="input-group">
+							<input type="text" validtime=true class="form-control" index="$index" ng-model="addedTimeZone.timePart" ng-change="timestampChanged($index)" ui-timepicker ui-timepicker-events>
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" ng-click="open($event, $index)"><i class="glyphicon glyphicon-calendar"></i></button>
+							</span>
+							<input readonly type="text" class="form-control" ng-change="dateChanged($index)" ng-model="addedTimeZone.datePart"
+									is-open="addedTimeZone.editMode" ng-required="true" datepicker-popup="yyyy-MM-dd" show-button-bar="false" />
+							<span class="input-group-btn">
+								<button type="button" class="btn btn-default" index="$index" ng-click="removeTimeZone($index)">Remove</button>
+							</span>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-6 col-md-offset-3">
+						<label> {{addedTimeZone.timeZoneName}} </label>
+						<label ng-if="!addedTimeZone.invalidTime" ng-bind="addedTimeZone.moment"></label>
+						<label ng-if="addedTimeZone.invalidTime" style="color: #FF0000">Invalid Time</label>
+					</div>
 				</div>
 			</div>
-
-			<br />
-			<label> {{addedTimeZone.timeZoneName}} </label>
-			<label ng-if="!addedTimeZone.invalidTime" ng-bind="addedTimeZone.moment"></label>
-			<label ng-if="addedTimeZone.invalidTime" style="color: #FF0000">Invalid Time</label>
 		</li>
 	</ol>
-
-	<hr />
 </div>
 
 </body>
