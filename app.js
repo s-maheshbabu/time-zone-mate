@@ -344,6 +344,10 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 				// logic for 'onSelect' event.
 				scope.timeZoneBeingAddedIsValid = false;
             });
+
+			elem.on('mouseup', function() {
+				elem.select();
+            });
         }
     };
 });
