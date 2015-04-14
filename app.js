@@ -197,10 +197,10 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', function(TimeZoneObject)
 		addTimeZone: function(timeZoneToBeAdded, titleOfTheTimeZone) {
 			var addedTimeZones = this.addedTimeZones();
 			var localTimeZoneObject = this.localTimeZoneObject();
-			console.log("We already have " + addedTimeZones.length + " timeZones and we are adding " + timeZoneToBeAdded);
+			console.log("We already have " + addedTimeZones.length + " timeZones and we are adding " + timeZoneToBeAdded + " under the title " + titleOfTheTimeZone);
 
 			for (var i = 0; i < addedTimeZones.length; i++) {
-				if(addedTimeZones[i].timeZoneName === timeZoneToBeAdded) {
+				if(addedTimeZones[i].title === titleOfTheTimeZone) {
 					console.log("Requested time zone already exists. Moving it to the top");
 					var timeZoneObjectsToBeBubbledUp = addedTimeZones.splice(i, 1);
 					addedTimeZones = timeZoneObjectsToBeBubbledUp.concat(addedTimeZones);
