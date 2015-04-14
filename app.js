@@ -342,7 +342,9 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 				// We set it to false blindly because 'onSelect' event is triggered after 'onChange' and
 				// if the user's input happens to be a valid one, we will set it to true in the handling
 				// logic for 'onSelect' event.
-				scope.timeZoneBeingAddedIsValid = false;
+				if(elem.val()) {
+					scope.timeZoneBeingAddedIsValid = false;
+				}
             });
 
 			elem.on('mouseup', function() {
