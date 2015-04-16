@@ -327,6 +327,10 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 				var allTimeZones = TimeZoneClocksManager.allTimeZones();
 				allTimeZones[scope.index].markAsInvalid();
             });
+
+			elem.on('mouseup', function() {
+				elem.select();
+            });
 		}
     };
 });
