@@ -63,6 +63,19 @@ app.factory('TimeZoneObject', [function() {
 			return new Date(m.year(), m.month(), m.date(),  m.hours(), m.minutes(), m.seconds());
 		};
 
+		this.timePartGetterSetter = function(value) {
+			if(angular.isDefined(value)) {
+				if(value == null) {
+					// Empty value in the time part. Ignoring the value.
+					return;
+				}
+				this.timePart = value;
+			}
+			else {
+				return this.timePart;
+			}
+		}
+
 		this.getDatePart = function () {
 			var m = _this.moment;
 			return new Date(m.year(), m.month(), m.date(), 0, 0, 0);
