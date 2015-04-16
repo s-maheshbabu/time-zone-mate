@@ -359,6 +359,9 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	$scope.localTime = localTimeZoneObject;
 
 	$scope.allTimeZones = TimeZoneClocksManager.allTimeZones();
+	// Since we want to display user added time zones in two columns, split the
+	// data into an array of arrays where each sub array holds two time zones.
+	$scope.addedTimeZoneChunks = chunk(TimeZoneClocksManager.addedTimeZones(), 2);
 
 	// Determines the state of the time zone entry being made by the user.
 	$scope.timeZoneBeingAddedIsValid = true;
@@ -373,6 +376,8 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	$scope.removeTimeZone = function(index) {
         console.log("Attempting to remove added clock at index " + index);
 		TimeZoneClocksManager.removeTimeZone(index);
+
+		$scope.addedTimeZoneChunks = chunk(TimeZoneClocksManager.addedTimeZones(), 2);
     };
 
 	// All clocks being reset.
@@ -384,6 +389,7 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	// Whenever the allTimeZones list changes, update the UI.
 	$scope.$watch(function () { return TimeZoneClocksManager.allTimeZones() }, function (newVal, oldVal) {
 		if (typeof newVal !== 'undefined') {
+			$scope.addedTimeZoneChunks = chunk(TimeZoneClocksManager.addedTimeZones(), 2);
 			$scope.localTime = TimeZoneClocksManager.localTimeZoneObject();
 			$scope.allTimeZones = TimeZoneClocksManager.allTimeZones();
 		}
@@ -405,6 +411,14 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	$interval(function(){
 		$scope.localTime = localTimeZoneObject;
 	},1000);
+
+	function chunk(array, size) {
+	  var arrayOfChunks = [];
+	  for (var i = 0; i < array.length; i += size) {
+		arrayOfChunks.push(array.slice(i, i + size));
+	  }
+	  return arrayOfChunks;
+	};
 }]);
 
 })();
