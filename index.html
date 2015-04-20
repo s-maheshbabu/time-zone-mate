@@ -38,7 +38,7 @@
 					<span class="input-group-btn">
 						<button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
 					</span>
-					<input readonly type="text" class="form-control" ng-change="dateChanged(0)" ng-model="localTime.datePart"
+					<input readonly type="text" class="form-control" ng-change="dateChanged(0)" ng-model="localTime.datePartGetterSetter" ng-model-options="{getterSetter: true}"
 							is-open="localTime.editMode" ng-required="true" datepicker-popup="yyyy-MM-dd" show-button-bar="false" />
 				</p>
 			</div>
@@ -92,7 +92,7 @@
 									<span class="input-group-btn">
 										<button type="button" class="btn btn-default" ng-click="open($event, (2*$parent.$index) + $index + 1)"><i class="glyphicon glyphicon-calendar"></i></button>
 									</span>
-									<input readonly type="text" class="form-control" ng-change="dateChanged((2*$parent.$index) + $index + 1)" ng-model="addedTimeZone.datePart"
+									<input readonly type="text" class="form-control" ng-change="dateChanged((2*$parent.$index) + $index + 1)" ng-model="addedTimeZone.datePartGetterSetter" ng-model-options="{getterSetter: true}"
 											is-open="addedTimeZone.editMode" ng-required="true" datepicker-popup="yyyy-MM-dd" show-button-bar="false" />
 									<span class="input-group-btn">
 										<button type="button" class="btn btn-default" index="(2*$parent.$index) + $index + 1" ng-click="removeTimeZone((2*$parent.$index) + $index + 1)">Remove</button>
