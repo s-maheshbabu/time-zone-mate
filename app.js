@@ -177,10 +177,10 @@ app.factory('TimeZoneAutoCompleteService', [function() {
         getLocations: function() {
 			var locations = new Array();
 			for(var i = 0; i < locationsToTimeZones.length; i++) {
-				locations[i] = locationsToTimeZones[i][0];
+				locations.push(locationsToTimeZones[i][0]);
 			}
 			for(var i = 0; i < locationsToOffsets.length; i++) {
-				locations[i] = locationsToOffsets[i][0];
+				locations.push(locationsToOffsets[i][0]);
 			}
 			return locations;
         },
