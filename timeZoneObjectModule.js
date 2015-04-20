@@ -260,7 +260,7 @@ timeZoneObjectModule.factory('OffsetBasedTimeZoneObject', [function() {
 		// a user friendly name to identify a time zone like GMT+5:30, UTC-1 etc.
 		this.title = title;
 		this.offsetInMinutes = offsetInMinutes;
-		if(!offsetInMinutes)
+		if(offsetInMinutes == undefined)
 		{
 			this.title = 'UTC+0';
 			this.offsetInMinutes = 0;

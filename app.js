@@ -9,7 +9,7 @@ angular.module('ui.timepicker').value('uiTimepickerConfig',{
 app.service('TimeZoneClocksManager', ['TimeZoneObject', 'OffsetBasedTimeZoneObject', function(TimeZoneObject, OffsetBasedTimeZoneObject) {
 	var clocksRunning = true;
 
-	var allTimeZones = [new TimeZoneObject(), new TimeZoneObject('UTC')];
+	var allTimeZones = [new TimeZoneObject(), new OffsetBasedTimeZoneObject(0, 'UTC')];
 
 	return {
 		allTimeZones: function() {
@@ -271,7 +271,7 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 					{
 						TimeZoneClocksManager.addTimeZone(timeZoneName, locationToBeAdded);
 					}
-					else if(offset = TimeZoneAutoCompleteService.getOffset(locationToBeAdded))
+					else if((offset = TimeZoneAutoCompleteService.getOffset(locationToBeAdded)) != undefined)
 					{
 						TimeZoneClocksManager.addOffsetBasedTimeZone(offset, locationToBeAdded);
 					}
