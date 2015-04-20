@@ -45,7 +45,6 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-6 col-lg-offset-3 ">
-				<label> {{localTime.timeZoneName}}:  </label>
 				<label ng-if="!localTime.invalidTime" ng-bind="localTime.moment"></label>
 				<label ng-if="localTime.invalidTime" style="color: #FF0000">Invalid Time</label>
 			</div>
@@ -102,7 +101,6 @@
 						</div>
 						<div class="row">
 							<div class="col-lg-10 col-lg-offset-1">
-								<label> {{addedTimeZone.timeZoneName}} </label>
 								<label ng-if="!addedTimeZone.invalidTime" ng-bind="addedTimeZone.moment"></label>
 								<label ng-if="addedTimeZone.invalidTime" style="color: #FF0000">Invalid Time</label>
 							</div>
