@@ -6,10 +6,10 @@ angular.module('ui.timepicker').value('uiTimepickerConfig',{
   timeFormat: 'h:i:s A'
 });
 
-app.service('TimeZoneClocksManager', ['TimeZoneObject', 'OffsetBasedTimeZoneObject', function(TimeZoneObject, OffsetBasedTimeZoneObject) {
+app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTimeZoneObject', function(TimeZoneObject, OffsetBasedTimeZoneObject) {
 	var clocksRunning = true;
 
-	var allTimeZones = [new TimeZoneObject(), new OffsetBasedTimeZoneObject(0, 'UTC')];
+	var allTimeZones = [new NameBasedTimeZoneObject(), new OffsetBasedTimeZoneObject(0, 'UTC')];
 
 	return {
 		allTimeZones: function() {
@@ -58,9 +58,7 @@ app.service('TimeZoneClocksManager', ['TimeZoneObject', 'OffsetBasedTimeZoneObje
 			console.log('Adjusting all clocks to match the clock - ' + pivotClock.toString() + ' at index ' + index);
 			this.stopClocks();
 			for (var i = 0; i < allTimeZones.length; i++) {
-				if(i != index) {
-					allTimeZones[i].setMomentFromUTC(pivotClock.getMomentInUTC());
-				}
+				allTimeZones[i].setMomentFromUTC(pivotClock.getMomentInUTC());
 			}
 			this.markAllClocksValid();
 		},
