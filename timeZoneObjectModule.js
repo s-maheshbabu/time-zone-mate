@@ -137,7 +137,7 @@ var NameBasedTimeZoneObject = function ($interval, timeZoneName, title)
 		// Corresponding moment in this timeZone
 		var thisTimeZoneMoment = inputMoment.tz(this.timeZoneName);
 
-		clearInterval(timer);
+		this.interval.cancel(this._getTimer());
 		this.moment = thisTimeZoneMoment;
 
 		this._timePart = this._getTimePart();
@@ -211,7 +211,7 @@ var OffsetBasedTimeZoneObject = function ($interval, offsetInMinutes, title)
 		// Corresponding moment in this timeZone
 		var thisTimeZoneMoment = inputMoment.utcOffset(this.offsetInMinutes);
 
-		clearInterval(timer);
+		this.interval.cancel(this._getTimer());
 		this.moment = thisTimeZoneMoment;
 
 		this._timePart = this._getTimePart();
