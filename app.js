@@ -6,10 +6,10 @@ angular.module('ui.timepicker').value('uiTimepickerConfig',{
   timeFormat: 'h:i:s A'
 });
 
-app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTimeZoneObject', function(TimeZoneObject, OffsetBasedTimeZoneObject) {
+app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTimeZoneObject', '$injector', function(NameBasedTimeZoneObject, OffsetBasedTimeZoneObject, $injector) {
 	var clocksRunning = true;
 
-	var allTimeZones = [new NameBasedTimeZoneObject(), new OffsetBasedTimeZoneObject(0, 'UTC')];
+	var allTimeZones= [$injector.instantiate(NameBasedTimeZoneObject, {timeZoneName:undefined,title:undefined}), $injector.instantiate(OffsetBasedTimeZoneObject, {offsetInMinutes:0, title:'UTC'})];
 
 	return {
 		allTimeZones: function() {
@@ -75,7 +75,7 @@ app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTim
 		addTimeZone: function(timeZoneToBeAdded, titleOfTheTimeZone) {
 			console.log("We already have " + this.addedTimeZones().length + " timeZones and we are adding " + timeZoneToBeAdded + " under the title " + titleOfTheTimeZone);
 
-			var timeZoneObjectToBeAdded = new TimeZoneObject(timeZoneToBeAdded, titleOfTheTimeZone);
+			var timeZoneObjectToBeAdded = $injector.instantiate(NameBasedTimeZoneObject, {timeZoneName:timeZoneToBeAdded,title:titleOfTheTimeZone});
 			this._addTimeZone(timeZoneObjectToBeAdded, titleOfTheTimeZone);
 		},
 		// Adds a new timeZone object that represents time at the given offset. If an object for the given
@@ -84,8 +84,8 @@ app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTim
 		// like GMT+5:30, UTC-1 etc. If missing, the time zone name will be used as title.
 		addOffsetBasedTimeZone: function(offsetInMinutes, titleOfTheTimeZone) {
 			console.log("We already have " + this.addedTimeZones().length + " timeZones and we are adding time zone at offset " + offsetInMinutes + " under the title " + titleOfTheTimeZone);
-			
-			var timeZoneObjectToBeAdded = new OffsetBasedTimeZoneObject(offsetInMinutes, titleOfTheTimeZone);
+
+			var timeZoneObjectToBeAdded = $injector.instantiate(OffsetBasedTimeZoneObject, {offsetInMinutes:offsetInMinutes, title:titleOfTheTimeZone});
 			this._addTimeZone(timeZoneObjectToBeAdded, titleOfTheTimeZone);
 		},
 		stopClocks: function() {
@@ -169,7 +169,7 @@ app.factory('TimeZoneAutoCompleteService', [function() {
     }
 }]);
 
-app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
+app.directive('uiTimepickerEvents', ['TimeZoneClocksManager', function(TimeZoneClocksManager) {
     return {
         restrict: 'A',
         scope: {
@@ -192,6 +192,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 
 				console.log("A valid time was entered by the user: " + elem.val() + " at index: " + scope.index);
 				TimeZoneClocksManager.adjustAllClocks(scope.index);
+				scope.$apply();
             });
 
 			elem.on('timeFormatError', function() {
@@ -212,6 +213,7 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
 				attr.validtime = false;
 				var allTimeZones = TimeZoneClocksManager.allTimeZones();
 				allTimeZones[scope.index].markAsInvalid();
+				scope.$apply();
             });
 
 			elem.on('mouseup', function() {
@@ -219,9 +221,9 @@ app.directive('uiTimepickerEvents', function(TimeZoneClocksManager) {
             });
 		}
     };
-});
+}]);
 
-app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneClocksManager) {
+app.directive('autoComplete', ['TimeZoneAutoCompleteService', 'TimeZoneClocksManager', function(TimeZoneAutoCompleteService, TimeZoneClocksManager) {
     return {
         restrict: 'A',
         scope: false,
@@ -247,6 +249,7 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 					{
 						throw "An unexpected error. The requested location " + locationToBeAdded + " is not known.";
 					}
+					scope.$apply();
 				}
             });
 
@@ -259,6 +262,7 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
 				if(elem.val()) {
 					scope.timeZoneBeingAddedIsValid = false;
 				}
+				scope.$apply();
             });
 
 			elem.on('mouseup', function() {
@@ -266,7 +270,7 @@ app.directive('autoComplete', function(TimeZoneAutoCompleteService, TimeZoneCloc
             });
         }
     };
-});
+}]);
 
 app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager', function($scope, $interval, TimeZoneClocksManager) {
 	var localTimeZoneObject = TimeZoneClocksManager.localTimeZoneObject();
@@ -321,11 +325,11 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 		console.log("User changed the data on clock at index: " + index + ". Adjust time across all clocks.");
 		TimeZoneClocksManager.adjustAllClocks(index);
 	};
-
+/*
 	$interval(function(){
 		$scope.localTime = localTimeZoneObject;
 	},1000);
-
+*/
 	function chunk(array, size) {
 	  var arrayOfChunks = [];
 	  for (var i = 0; i < array.length; i += size) {

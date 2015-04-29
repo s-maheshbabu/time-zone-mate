@@ -1,8 +1,9 @@
 var timeZoneObjectModule= angular.module('TimeZoneObjectModule',[]);
 
 var TimeZoneObject = (function() {
-	function TimeZoneObject()
+	function TimeZoneObject($interval)
 	{
+		this.interval = $interval;
 		// A time zone object can be marked invalid, when the user enters an invalid timestamp.
 		this.invalidTime = false;
 
@@ -75,8 +76,8 @@ var TimeZoneObject = (function() {
 	TimeZoneObject.prototype.timerManager = function(flag) {
 		var _this = this;
 		if(flag) {
-			clearInterval(this._getTimer());
-			this._setTimer(setInterval(function() {
+			this.interval.cancel(this._getTimer());
+			this._setTimer(this.interval(function() {
 				_this.moment = _this._getCurrentMoment();
 
 				_this._timePart = _this._getTimePart();
@@ -84,7 +85,7 @@ var TimeZoneObject = (function() {
 			}, 1000));
 		}
 		else {
-			clearInterval(this._getTimer());
+			this.interval.cancel(this._getTimer());
 		}
 	};
 	// Resets <code>this</code> time zone object to current time and starts the timers.
@@ -118,11 +119,12 @@ timeZoneObjectModule.factory('NameBasedTimeZoneObject', [function() {
     return NameBasedTimeZoneObject;
 }]);
 
-var NameBasedTimeZoneObject = function (timeZoneName, title)
+var NameBasedTimeZoneObject = function ($interval, timeZoneName, title)
 {
-	TimeZoneObject.call(this);
+	TimeZoneObject.call(this, $interval);
 
 	this.getMomentInUTC = function() {
+		this._updateMoment(this._timePart, this._datePart);
 		var clone = moment(this.moment);
 		return clone.tz('UTC');
 	};
@@ -191,11 +193,12 @@ timeZoneObjectModule.factory('OffsetBasedTimeZoneObject', [function() {
     return OffsetBasedTimeZoneObject;
 }]);
 
-var OffsetBasedTimeZoneObject = function (offsetInMinutes, title)
+var OffsetBasedTimeZoneObject = function ($interval, offsetInMinutes, title)
 {
-	TimeZoneObject.call(this);
+	TimeZoneObject.call(this, $interval);
 
 	this.getMomentInUTC = function() {
+		this._updateMoment(this._timePart, this._datePart);
 		var clone = moment(this.moment);
 		return clone.utcOffset(0);
 	};
