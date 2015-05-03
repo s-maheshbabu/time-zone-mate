@@ -11,3 +11,18 @@
   font-size: 12px;
   line-height: 1.428571429;
   border-radius: 15px;
+}
+
+/* Date picker always has to be associated with an input or a div or a span.
+   However, in our UX we do not want to show the date but just want to show
+   the date picker. So, we hide the date input under the time input. Setting
+   the date input to invisible will not work because the date picker expects
+   a visible date input.
+*/
+.form-control.hidden-date-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0px;
+  z-index:-1;
+}
