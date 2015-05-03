@@ -169,6 +169,24 @@ app.factory('TimeZoneAutoCompleteService', [function() {
     }
 }]);
 
+app.directive("timePickerValidator", function() {
+	return {
+	restrict: 'A',
+	require: 'ngModel',
+	link: function(scope, ele, attrs, ctrl){
+	  ctrl.$parsers.unshift(function(value) {
+		if(!value){
+		  ctrl.$setValidity('userEnteredNullForTimeValue', false);
+		  // Set the time to midnight (the date part doesn't matter)
+		  return new Date(5555, 5, 5, 0, 0, 0, 0);
+		}
+		return value;
+	  });
+
+	}
+  }
+});
+
 app.directive('uiTimepickerEvents', ['TimeZoneClocksManager', function(TimeZoneClocksManager) {
     return {
         restrict: 'A',
@@ -347,11 +365,7 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 		console.log("User changed the data on clock at index: " + index + ". Adjust time across all clocks.");
 		TimeZoneClocksManager.adjustAllClocks(index);
 	};
-/*
-	$interval(function(){
-		$scope.localTime = localTimeZoneObject;
-	},1000);
-*/
+
 	function chunk(array, size) {
 	  var arrayOfChunks = [];
 	  for (var i = 0; i < array.length; i += size) {
