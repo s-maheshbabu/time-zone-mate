@@ -327,6 +327,7 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 	// One of the timestamps was changed by the user.
 	$scope.timestampChanged = function(index) {
         console.log("User edited one of the timestamps. Stopping all clocks.");
+		$scope.togglePauseReset = false;
 		TimeZoneClocksManager.stopClocks();
     };
 
@@ -338,10 +339,24 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 		$scope.addedTimeZoneChunks = chunk(TimeZoneClocksManager.addedTimeZones(), 2);
     };
 
-	// All clocks being reset.
-	$scope.resetAllClocks = function() {
-        console.log("All clocks are being reset to the current time");
-		TimeZoneClocksManager.resetAllClocks();
+	// When <code>true</code>, the button acts as 'Pause' and when <code>false</code> functions
+	// as a 'Reset' button.
+	$scope.togglePauseReset = true;
+    $scope.$watch('togglePauseReset', function(){
+        $scope.togglePauseResetText = $scope.togglePauseReset ? 'Pause' : 'Reset';
+    });
+	$scope.pauseOrResetClocks = function() {
+		if($scope.togglePauseReset)
+		{
+			console.log("All clocks are being stopped on user request.");
+			TimeZoneClocksManager.stopClocks();
+		}
+		else
+		{
+			console.log("All clocks are being reset to the current time on user request.");
+			TimeZoneClocksManager.resetAllClocks();
+		}
+		$scope.togglePauseReset = !$scope.togglePauseReset;
     };
 
 	// Whenever the allTimeZones list changes, update the UI.
@@ -358,11 +373,13 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 		$event.preventDefault();
 		$event.stopPropagation();
 
+		$scope.togglePauseReset = false;
 		TimeZoneClocksManager.setInEditMode(index);
 	};
 
 	$scope.dateChanged = function(index) {
 		console.log("User changed the data on clock at index: " + index + ". Adjust time across all clocks.");
+		$scope.togglePauseReset = false;
 		TimeZoneClocksManager.adjustAllClocks(index);
 	};
 
