@@ -54,21 +54,31 @@
 				<span class="input-group-btn">
 					<button type="button" class="btn btn-default" ng-click="pauseOrResetClocks()"> {{togglePauseResetText}} </button>
 				</span>
+				<span class="input-group-btn">
+					<button type="button" class="btn btn-default" ng-click="toggleClockAdder()"> Add Clock </button>
+				</span>
 			</div>
 		</div>
 	</div>
 
 	<hr />
-	<div class="container">
+	<div class="container" collapse="isCollapsed">
 		<div class="row">
-			<div class="col-lg-4 col-lg-offset-4" ng-class="{'has-error':!timeZoneBeingAddedIsValid}">
-				<input type="text" class="form-control" placeholder="Try New York, India, PST, America/Los_Angeles etc." name="timeZoneToBeAdded" ng-model="timeZoneToBeAdded" auto-complete>
+			<div class="col-lg-6 col-lg-offset-3" ng-class="{'has-error':!timeZoneBeingAddedIsValid}">
+				<div class="row">
+					<div class="col-xs-11">
+						<input type="text" class="form-control" placeholder="Try New York, India, PST, America/Los_Angeles etc." name="timeZoneToBeAdded" ng-model="timeZoneToBeAdded" auto-complete>
+					</div>
+					<div class="col-xs-1">
+						<button type="button" class="btn btn-danger btn-circle pull-right" ng-click="toggleClockAdder()"><i class="glyphicon glyphicon-remove"></i></button>
+					</div>
+				</div>
 			</div>
 		</div>
 
 		<div class="row">
 			<div class="col-lg-6 col-lg-offset-3" ng-hide="timeZoneBeingAddedIsValid">
-				<label class="center-block text-danger text-center error-message"><i> Sorry, that time zone is not supported. Click here if you think it should be supported. </i></label>
+				<label class="center-block text-danger pull-left error-message"><i> Sorry, that time zone is not supported. Click here if you think it should be supported. </i></label>
 			</div>
 		</div>
 	</div>

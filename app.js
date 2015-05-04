@@ -359,6 +359,11 @@ app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager
 		$scope.togglePauseReset = !$scope.togglePauseReset;
     };
 
+	$scope.isCollapsed = true;
+	$scope.toggleClockAdder = function() {
+		$scope.isCollapsed = !$scope.isCollapsed;
+	}
+
 	// Whenever the allTimeZones list changes, update the UI.
 	$scope.$watch(function () { return TimeZoneClocksManager.allTimeZones() }, function (newVal, oldVal) {
 		if (typeof newVal !== 'undefined') {
