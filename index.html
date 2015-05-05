@@ -61,8 +61,11 @@
 		</div>
 	</div>
 
-	<hr />
 	<div class="container" collapse="isCollapsed">
+		<div class="row">
+			<hr />
+		</div>
+
 		<div class="row">
 			<div class="col-lg-6 col-lg-offset-3" ng-class="{'has-error':!timeZoneBeingAddedIsValid}">
 				<div class="row">
@@ -81,8 +84,11 @@
 				<label class="center-block text-danger pull-left error-message"><i> Sorry, that time zone is not supported. Click here if you think it should be supported. </i></label>
 			</div>
 		</div>
+
+		<div class="row">
+			<hr />
+		</div>
 	</div>
-	<hr />
 
 	<ol class="list-group">
 		<li class="list-group-item" ng-repeat="addedTimeZoneChunk in addedTimeZoneChunks">
