@@ -26,3 +26,7 @@
   left: 0px;
   z-index:-1;
 }
+
+.spacer {
+    margin-top: 15px;
+}
