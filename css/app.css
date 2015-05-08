@@ -13,6 +13,15 @@
   border-radius: 10px;
 }
 
+.btn-circle:hover {
+  width: 24px;
+  height: 24px;
+  padding: 1px 0px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 12px;
+}
+
 /* Date picker always has to be associated with an input or a div or a span.
    However, in our UX we do not want to show the date but just want to show
    the date picker. So, we hide the date input under the time input. Setting
