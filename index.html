@@ -16,8 +16,10 @@
 <script src="moment.min.js"></script>
 <script src="moment-timezone-with-data.min.js"></script>
 
-<link href='https://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css' rel="stylesheet"/>
+<link rel="stylesheet/less" type="text/css" href="less/styles.less" />
+<script src="less.js" type="text/javascript"></script>
 <link rel="stylesheet" type="text/css" href="css/app.css">
+
 
 <script src="app.js"></script>
 <script src="timeZoneObjectModule.js"></script>
@@ -28,7 +30,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-6 col-lg-offset-3">
-				<label> {{localTime.title}} </label>
+				<label class="my-label"> {{localTime.title}} </label>
 			</div>
 		</div>
 		<div class="row">
@@ -36,7 +38,7 @@
 				<p class="input-group">
 					<input type="text" validtime=true index=0 name="localTime" class="form-control" ng-model="localTime._timePart" ng-change="timestampChanged($index)" ui-timepicker time-picker-validator ui-timepicker-events />
 					<span class="input-group-btn">
-						<button type="button" class="btn btn-default" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
+						<button type="button" class="btn green-button" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
 					</span>
 					<input readonly type="text" class="form-control hidden-date-input invisible" ng-change="dateChanged(0)" ng-model="localTime.datePartGetterSetter" ng-model-options="{getterSetter: true}"
 							is-open="localTime.editMode" ng-required="true" datepicker-popup="yyyy-MM-dd" show-button-bar="false" />
@@ -51,11 +53,11 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-2 col-lg-offset-5">
-				<span class="input-group-btn">
-					<button type="button" class="btn btn-default" ng-click="pauseOrResetClocks()"> {{togglePauseResetText}} </button>
+				<span>
+					<button type="button" class="btn blue-button" ng-click="pauseOrResetClocks()"> {{togglePauseResetText}} </button>
 				</span>
-				<span class="input-group-btn">
-					<button type="button" class="btn btn-default" ng-click="toggleClockAdder()"> Add Clock </button>
+				<span>
+					<button type="button" class="btn blue-button" ng-click="toggleClockAdder()"> Add Clock </button>
 				</span>
 			</div>
 		</div>
@@ -112,7 +114,7 @@
 								<p class="input-group">
 									<input type="text" validtime=true class="form-control" index="(2*$parent.$index) + $index + 1" ng-model="addedTimeZone._timePart" ng-change="timestampChanged((2*$parent.$index) + $index + 1)" ui-timepicker time-picker-validator ui-timepicker-events>
 									<span class="input-group-btn">
-										<button type="button" class="btn btn-default" ng-click="open($event, (2*$parent.$index) + $index + 1)"><i class="glyphicon glyphicon-calendar"></i></button>
+										<button type="button" class="btn green-button" ng-click="open($event, (2*$parent.$index) + $index + 1)"><i class="glyphicon glyphicon-calendar"></i></button>
 									</span>
 									<input readonly type="text" class="form-control hidden-date-input invisible" ng-change="dateChanged((2*$parent.$index) + $index + 1)" ng-model="addedTimeZone.datePartGetterSetter" ng-model-options="{getterSetter: true}"
 											is-open="addedTimeZone.editMode" ng-required="true" datepicker-popup="yyyy-MM-dd" show-button-bar="false" />
