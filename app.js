@@ -165,7 +165,10 @@ app.factory('TimeZoneAutoCompleteService', [function() {
 					return locationsToOffsets[i][1];
 				}
 			}
-        }
+        },
+		isValidLocation: function(key) {
+			return this.getTimeZone(key) != undefined || this.getOffset(key) != undefined;
+		}
     }
 }]);
 
@@ -291,7 +294,7 @@ app.directive('autoComplete', ['TimeZoneAutoCompleteService', 'TimeZoneClocksMan
 				// So the hack is to maintain a flag in response to onChange event, wait for about 150 ms and if
 				// no onSelect event is raised in the meantime, only then do we render an error message.
 				scope.isInterimChange = false;
-				if(valueEntered == '')
+				if(valueEntered == '' || TimeZoneAutoCompleteService.isValidLocation(valueEntered))
 				{
 					scope.timeZoneBeingAddedIsValid = true;
 					scope.$apply();
