@@ -2,7 +2,6 @@
 
 // Transferwise green: 46d633 and hover green: #55d944
 @input-border-focus: #55d944;
-
 label {
   color: #46d633;
   text-decoration: none;
@@ -11,10 +10,17 @@ label {
   font-family: Tahoma, Geneva, sans-serif;
 }
 
-.blue-button {
-  .button-variant(@btn-primary-color; #00c6ff; #fff);
+label.complete-time {
+  color: #46d633;
+  text-decoration: none;
+  font-style: italic;
+  font-size: 0.8em;
+  font-family: Tahoma, Geneva, sans-serif;
 }
 
+.blue-button {
+  .button-variant(@btn-primary-color; #00c6ff; darken(#00c6ff, 5%));
+}
 .green-button {
-  .button-variant(@btn-primary-color; #46d633; #fff);
+  .button-variant(@btn-primary-color; #46d633; darken(#46d633, 5%));
 }
