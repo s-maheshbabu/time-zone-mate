@@ -29,12 +29,12 @@
 <div ng-controller="ClockController">
 	<div class="container">
 		<div class="row">
-			<div class="col-lg-6 col-lg-offset-3">
+			<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 				<label class="my-label"> {{localTime.title}} </label>
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 col-lg-offset-3">
+			<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 				<p class="input-group">
 					<input type="text" validtime=true index=0 name="localTime" class="form-control" ng-model="localTime._timePart" ng-change="timestampChanged($index)" ui-timepicker time-picker-validator ui-timepicker-events />
 					<span class="input-group-btn">
@@ -46,19 +46,15 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-lg-6 col-lg-offset-3">
+			<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 				<label ng-if="!localTime.invalidTime" class="complete-time" ng-bind="localTime.moment.format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ')"></label>
 				<span ng-if="localTime.invalidTime" class="label label-danger">Invalid Time</span>
 			</div>
 		</div>
-		<div class="row">
-			<div class="col-lg-2 col-lg-offset-5">
-				<span>
-					<button type="button" class="btn blue-button" ng-click="pauseOrResetClocks()"> {{togglePauseResetText}} </button>
-				</span>
-				<span>
-					<button type="button" class="btn blue-button" ng-click="toggleClockAdder()"> Add Clock </button>
-				</span>
+		<div id="outer" class="row">
+			<div id="inner" class="col-lg-2 col-lg-offset-5 col-sm-4 col-sm-offset-4 col-xs-8 col-xs-offset-2">
+				<button type="button" class="btn blue-button" ng-click="pauseOrResetClocks()"> {{togglePauseResetText}} </button>
+				<button type="button" class="btn blue-button" ng-click="toggleClockAdder()"> Add Clock </button>
 			</div>
 		</div>
 	</div>
@@ -69,20 +65,22 @@
 		</div>
 
 		<div class="row">
-			<div class="col-lg-6 col-lg-offset-3" ng-class="{'has-error':!timeZoneBeingAddedIsValid}">
-				<div class="row">
-					<div class="col-xs-11">
-						<input type="text" class="form-control" placeholder="Try New York, India, PST, America/Los_Angeles etc." name="timeZoneToBeAdded" ng-model="timeZoneToBeAdded" auto-complete>
-					</div>
-					<div class="col-xs-1">
-						<button type="button" class="btn btn-danger btn-circle pull-right" ng-click="toggleClockAdder()"><i class="glyphicon glyphicon-remove"></i></button>
-					</div>
-				</div>
+			<div class="col-lg-5 col-lg-offset-3 col-sm-7 col-sm-offset-2 col-xs-9">
+			</div>	
+			<div class="col-lg-1 col-sm-1 col-xs-3">
+				<button type="button" class="btn btn-danger btn-circle pull-right" ng-click="toggleClockAdder()"><i class="glyphicon glyphicon-remove"></i></button>
+			</div>
+		</div>
+		<div class="row spacer">
+		</div>
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12" ng-class="{'has-error':!timeZoneBeingAddedIsValid}">
+				<input type="text" class="form-control" placeholder="Try New York, India, PST, America/Los_Angeles etc." name="timeZoneToBeAdded" ng-model="timeZoneToBeAdded" auto-complete>
 			</div>
 		</div>
 
 		<div class="row">
-			<div class="col-lg-6 col-lg-offset-3" ng-hide="timeZoneBeingAddedIsValid">
+			<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12" ng-hide="timeZoneBeingAddedIsValid">
 				<label class="center-block text-danger pull-left error-message"><i> Sorry, that time zone is not supported. Click here if you think it should be supported. </i></label>
 			</div>
 		</div>
@@ -96,21 +94,21 @@
 		<li class="list-group-item" ng-repeat="addedTimeZoneChunk in addedTimeZoneChunks">
 			<div class="container-fluid">
 				<div class="row">
-					<div class="col-lg-6" ng-repeat="addedTimeZone in addedTimeZoneChunk">
+					<div class="col-lg-6 col-sm-6 col-xs-12" ng-repeat="addedTimeZone in addedTimeZoneChunk">
 						<div class="row">
-							<div class="col-lg-5 col-lg-offset-3">
+							<div class="col-lg-5 col-lg-offset-3 col-sm-7 col-sm-offset-2 col-xs-9">
 								<div class="row spacer">
-									<div class="col-lg-12">
+									<div class="col-lg-12 col-sm-12 col-xs-12">
 										<label> {{addedTimeZone.title}} </label>
 									</div>
 								</div>
 							</div>
-							<div class="col-lg-1">
+							<div class="col-lg-1 col-sm-1 col-xs-3">
 								<button type="button" class="btn btn-danger btn-circle pull-right" index="(2*$parent.$index) + $index + 1" ng-click="removeTimeZone((2*$parent.$index) + $index + 1)"><i class="glyphicon glyphicon-remove"></i></button>
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-lg-6 col-lg-offset-3">
+							<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 								<p class="input-group">
 									<input type="text" validtime=true class="form-control" index="(2*$parent.$index) + $index + 1" ng-model="addedTimeZone._timePart" ng-change="timestampChanged((2*$parent.$index) + $index + 1)" ui-timepicker time-picker-validator ui-timepicker-events>
 									<span class="input-group-btn">
@@ -122,7 +120,7 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-lg-6 col-lg-offset-3">
+							<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 								<label ng-if="!addedTimeZone.invalidTime" class="complete-time" ng-bind="addedTimeZone.moment.format('ddd MMM DD YYYY HH:mm:ss [GMT]ZZ')"></label>
 								<span ng-if="addedTimeZone.invalidTime" class="label label-danger">Invalid Time</span>
 							</div>
@@ -138,7 +136,7 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-lg-6" ng-repeat="item in rows">
-						<label> {{item.title}} </label>
+						<label> mahesh {{item.title}} </label>
 					</div>
 				</div>
 		</li>

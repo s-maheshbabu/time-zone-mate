@@ -39,3 +39,14 @@
 .spacer {
     margin-top: 15px;
 }
+
+/*
+Together help keep content within a div centered.
+http://stackoverflow.com/questions/114543/horizontally-center-a-div-in-a-div
+*/
+#outer {
+  text-align: center;
+}
+#inner {
+  display: inline-block;
+}
