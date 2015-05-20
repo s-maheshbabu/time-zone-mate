@@ -7,19 +7,10 @@
   width: 20px;
   height: 20px;
   text-align: center;
-  padding: 1px 0;
+  padding: 2px 0;
   font-size: 12px;
   line-height: 1.428571429;
   border-radius: 10px;
-}
-
-.btn-circle:hover {
-  width: 24px;
-  height: 24px;
-  padding: 1px 0px;
-  font-size: 18px;
-  line-height: 1.33;
-  border-radius: 12px;
 }
 
 /* Date picker always has to be associated with an input or a div or a span.
