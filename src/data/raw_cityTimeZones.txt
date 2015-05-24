@@ -11722,6 +11722,7 @@ Modica:Europe/Rome
 Misterbianco:Europe/Rome
 Misilmeri:Europe/Rome
 Milazzo:Europe/Rome
+Milan:Europe/Rome
 Messina:Europe/Rome
 Mazara del Vallo:Europe/Rome
 Mascalucia:Europe/Rome
