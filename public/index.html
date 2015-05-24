@@ -73,7 +73,8 @@
 		</div>
 		<div class="row">
 			<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12" ng-class="{'has-error':!timeZoneBeingAddedIsValid}">
-				<input type="text" class="form-control" placeholder="Try New York, India, PST, America/Los_Angeles etc." name="timeZoneToBeAdded" ng-model="timeZoneToBeAdded" auto-complete>
+				<input type="text" class="form-control" placeholder="Try New York, India, PST, America/Los_Angeles etc." name="timeZoneToBeAdded" ng-model="timeZoneToBeAdded"
+						auto-complete time-zone-being-added-is-valid="timeZoneBeingAddedIsValid" include-peripehral-locations="includePeripehralLocations">
 			</div>
 		</div>
 
@@ -82,6 +83,18 @@
 				<label class="center-block text-danger pull-left error-message"><i> Sorry, that time zone is not supported. Click here if you think it should be supported. </i></label>
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
+				<div class="checkbox pull-right">
+				  <label>
+					<input type="checkbox" ng-change="includePeripehralLocations(isIncludePeripehralLocations)" ng-model="isIncludePeripehralLocations"></input>
+					<span>Include all locations</span>
+				  </label>
+				</div>
+			</div>
+		</div>
+
 		<div class="row spacer">
 		</div>
 	</div>

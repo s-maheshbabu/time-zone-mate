@@ -42,3 +42,27 @@ http://stackoverflow.com/questions/114543/horizontally-center-a-div-in-a-div
 #inner {
   display: inline-block;
 }
+
+input[type="checkbox"] {
+  display:none;
+}
+
+input[type="checkbox"] + span:before {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+input[type="checkbox"] + span:before {
+  content: "\e157"; /* unchecked */
+}
+
+input[type="checkbox"]:checked + span:before {
+  content: "\e067"; /* check */
+}
