@@ -34,7 +34,7 @@ Colombia
 Comoros
 Republic of the Congo
 Costa Rica
-Côte d'Ivoire
+Ivory Coast
 Croatia
 Cuba
 Cyprus
@@ -77,8 +77,8 @@ Jamaica
 Japan
 Jordan
 Kenya
-Korea, North
-Korea, South
+North Korea
+South Korea
 Kuwait
 Kyrgyzstan
 Laos
@@ -106,10 +106,10 @@ Monaco
 Montenegro
 Morocco
 Mozambique
-Myanmar
+Myanmar [Burma]
 Namibia
 Nauru
- Nepal
+Nepal
 Nicaragua
 Niger
 Nigeria
@@ -130,7 +130,7 @@ Saint Lucia
 Saint Vincent and the Grenadines
 Samoa
 San Marino
-São Tomé and Príncipe
+Sao Tome and Principe
 Saudi Arabia
 Senegal
 Serbia
