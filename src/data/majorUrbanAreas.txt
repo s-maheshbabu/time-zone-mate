@@ -29,14 +29,13 @@ Paris
 Lima
 Chengdu
 London
-Nagoya (Chukyō)
-Lahore
+Nagoya (Chukyo)
 Bengaluru
 Chennai
 Chicago
 Bogota
 Ho Chi Minh City (Saigon)
-Hyderabad
+Hyderabad (India)
 Dongguan
 Johannesburg-East Rand
 Wuhan
@@ -151,7 +150,7 @@ Douala
 Taichung
 Pretoria (Tshwane)
 Santo Domingo
-Hyderabad
+Hyderabad (Pakistan)
 Caracas
 Pyongyang
 Kalyan
@@ -311,7 +310,7 @@ Rajkot
 Doha
 Daejeon
 Yangzhou
-Valencia
+Valencia (Spain)
 Zhuhai-Macau
 Meerut
 Varanasi
@@ -327,7 +326,7 @@ Novosibirsk
 Makassar
 Stockholm
 Columbus
-Valencia
+Valencia (Venezuela)
 Porto
 Leon
 Putian
