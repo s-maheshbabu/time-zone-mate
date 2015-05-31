@@ -144,10 +144,10 @@ app.factory('TimeZoneAutoCompleteFactory', ['$http', '$q', function($http, $q) {
 
 	var offsetsToOffsets = [['GMT',0],['UTC',0],['GMT-11',-660],['UTC-11',-660],['GMT-10',-600],['UTC-10',-600],['GMT-9:30',-570],['UTC-9:30',-570],['GMT-9',-540],['UTC-9',-540],['GMT-8',-480],['UTC-8',-480],['GMT-7',-420],['UTC-7',-420],['GMT-6',-360],['UTC-6',-360],['GMT-5',-300],['UTC-5',-300],['GMT-4:30',-270],['UTC-4:30',-270],['GMT-4',-240],['UTC-4',-240],['GMT-3:30',-210],['UTC-3:30',-210],['GMT-3',-180],['UTC-3',-180],['GMT-2:30',-150],['UTC-2:30',-150],['GMT-2',-120],['UTC-2',-120],['GMT-1',-60],['UTC-1',-60],['GMT+1',60],['UTC+1',60],['GMT+2',120],['UTC+2',120],['GMT+3',180],['UTC+3',180],['GMT+3:30',210],['UTC+3:30',210],['GMT+4',240],['UTC+4',240],['GMT+4:30',270],['UTC+4:30',270],['GMT+5',300],['UTC+5',300],['GMT+5:30',330],['UTC+5:30',330],['GMT+5:45',345],['UTC+5:45',345],['GMT+6',360],['UTC+6',360],['GMT+6:30',390],['UTC+6:30',390],['GMT+7',420],['UTC+7',420],['GMT+8',480],['UTC+8',480],['GMT+8:45',525],['UTC+8:45',525],['GMT+9',540],['UTC+9',540],['GMT+9:30',570],['UTC+9:30',570],['GMT+10',600],['UTC+10',600],['GMT+10:30',630],['UTC+10:30',630],['GMT+11',660],['UTC+11',660],['GMT+11:30',690],['UTC+11:30',690],['GMT+12',720],['UTC+12',720],['GMT+12:45',765],['UTC+12:45',765],['GMT+13',780],['UTC+13',780],['GMT+13:45',825],['UTC+13:45',825],['GMT+14',840],['UTC+14',840]];
 
-	var locationsToTimeZones = dedupeAndMergeStringArrays(timeZonesToTimeZones, countriesToTimeZones, majorUrbanAreasToTimeZones);
+	var locationsToTimeZones = dedupeAndMergeStringArrays(countriesToTimeZones, majorUrbanAreasToTimeZones);
 	var locationsToOffsets = dedupeAndMergeStringArrays(offsetsToOffsets, abbreviationToTimeZones);
 
-	var podunksToTimeZones = new Array();
+	var peripheralsToTimeZones = new Array();
 
 	function dedupeAndMergeStringArrays() {
 		var hash = {};
@@ -173,46 +173,47 @@ app.factory('TimeZoneAutoCompleteFactory', ['$http', '$q', function($http, $q) {
     return {
 		// Loads peripheral locations like small towns, time zone names etc. into the search index.
 		loadPeripehralLocations: function () {
-			var podunksToTimeZonesPromise;
+			var peripheralsToTimeZonesPromise;
 
 			// This means we have previously loaded all cities into memory. The user
 			// probably disabled these locations and is now asking for them again.
-			if (podunksToTimeZones.length > 0) {
+			if (peripheralsToTimeZones.length > 0) {
 				var deferred = $q.defer();
 				deferred.resolve();
-				podunksToTimeZonesPromise = deferred.promise;
+				peripheralsToTimeZonesPromise = deferred.promise;
 			}
 			// User requesting all locations for the first time. Download the data.
 			else {
-				podunksToTimeZonesPromise = $http({
+				peripheralsToTimeZonesPromise = $http({
 					method: "get",
 					url: "data/cityTimeZones.json"
 				});
-				podunksToTimeZonesPromise.success(
+				peripheralsToTimeZonesPromise.success(
 					function (jsonObject) {
 						for (var timeZoneName in jsonObject) {
 							var cityList = jsonObject[timeZoneName];
 							for (var i = 0; i < cityList.length; i++) {
-								podunksToTimeZones.push([cityList[i], timeZoneName]);
+								peripheralsToTimeZones.push([cityList[i], timeZoneName]);
 							}
 						}
 					}
 					);
-				podunksToTimeZonesPromise.error(
+				peripheralsToTimeZonesPromise.error(
 					function (jsonObject) {
 						console.log("Error fetching city timeZone data. Server returned: " + jsonObject);
 					}
 					);
 			}
 
-			podunksToTimeZonesPromise.then(function (result) {
-				locationsToTimeZones = dedupeAndMergeStringArrays(locationsToTimeZones, podunksToTimeZones);
+			peripheralsToTimeZonesPromise.then(function (result) {
+				locationsToTimeZones = dedupeAndMergeStringArrays(locationsToTimeZones, peripheralsToTimeZones);
+				locationsToTimeZones = locationsToTimeZones.concat(timeZonesToTimeZones);
 			});
-			return podunksToTimeZonesPromise;
+			return peripheralsToTimeZonesPromise;
 		},
 		// Purge peripheral locations leaving important ones like major cities, airports etc.
         purgePeripehralLocations: function () {
-			locationsToTimeZones = dedupeAndMergeStringArrays(timeZonesToTimeZones, countriesToTimeZones, majorUrbanAreasToTimeZones);
+			locationsToTimeZones = dedupeAndMergeStringArrays(countriesToTimeZones, majorUrbanAreasToTimeZones);
 			locationsToOffsets = dedupeAndMergeStringArrays(offsetsToOffsets, abbreviationToTimeZones);
         },
         getLocations: function() {
