@@ -186,7 +186,7 @@ app.factory('TimeZoneAutoCompleteFactory', ['$http', '$q', function($http, $q) {
 			else {
 				peripheralsToTimeZonesPromise = $http({
 					method: "get",
-					url: "data/cityTimeZones.json"
+					url: "data/podunksToTimeZones.json"
 				});
 				peripheralsToTimeZonesPromise.success(
 					function (jsonObject) {
