@@ -412,6 +412,17 @@ app.directive('autoComplete', ['TimeZoneAutoCompleteFactory', 'TimeZoneClocksMan
     };
 }]);
 
+app.directive('blurOnRelease', [function () {
+	return {
+		restrict: 'A',
+		link: function (scope, element, attrs) {
+			element.bind('mouseup', function () {
+				element.blur();
+			});
+		}
+	};
+}]);
+
 app.controller('ClockController', ['$scope', '$interval', 'TimeZoneClocksManager', function($scope, $interval, TimeZoneClocksManager) {
 	var localTimeZoneObject = TimeZoneClocksManager.localTimeZoneObject();
 	$scope.localTime = localTimeZoneObject;
