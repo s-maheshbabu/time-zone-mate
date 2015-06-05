@@ -6,10 +6,10 @@ angular.module('ui.timepicker').value('uiTimepickerConfig',{
   timeFormat: 'h:i:s A'
 });
 
-app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTimeZoneObject', '$injector', function(NameBasedTimeZoneObject, OffsetBasedTimeZoneObject, $injector) {
+app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTimeZoneObject', '$interval', function(NameBasedTimeZoneObject, OffsetBasedTimeZoneObject, $interval) {
 	var clocksRunning = true;
 
-	var allTimeZones= [$injector.instantiate(NameBasedTimeZoneObject, {timeZoneName:undefined,title:undefined}), $injector.instantiate(OffsetBasedTimeZoneObject, {offsetInMinutes:0, title:'UTC'})];
+	var allTimeZones= [new NameBasedTimeZoneObject($interval, undefined, undefined), new OffsetBasedTimeZoneObject($interval, 0, 'UTC')];
 
 	return {
 		allTimeZones: function() {
@@ -75,7 +75,8 @@ app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTim
 		addTimeZone: function(timeZoneToBeAdded, titleOfTheTimeZone) {
 			console.log("We already have " + this.addedTimeZones().length + " timeZones and we are adding " + timeZoneToBeAdded + " under the title " + titleOfTheTimeZone);
 
-			var timeZoneObjectToBeAdded = $injector.instantiate(NameBasedTimeZoneObject, {timeZoneName:timeZoneToBeAdded,title:titleOfTheTimeZone});
+			var timeZoneObjectToBeAdded = new NameBasedTimeZoneObject($interval, timeZoneToBeAdded, titleOfTheTimeZone);
+
 			this._addTimeZone(timeZoneObjectToBeAdded, titleOfTheTimeZone);
 		},
 		// Adds a new timeZone object that represents time at the given offset. If an object for the given
@@ -85,7 +86,8 @@ app.service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTim
 		addOffsetBasedTimeZone: function(offsetInMinutes, titleOfTheTimeZone) {
 			console.log("We already have " + this.addedTimeZones().length + " timeZones and we are adding time zone at offset " + offsetInMinutes + " under the title " + titleOfTheTimeZone);
 
-			var timeZoneObjectToBeAdded = $injector.instantiate(OffsetBasedTimeZoneObject, {offsetInMinutes:offsetInMinutes, title:titleOfTheTimeZone});
+			var timeZoneObjectToBeAdded = new OffsetBasedTimeZoneObject($interval, offsetInMinutes, titleOfTheTimeZone);
+
 			this._addTimeZone(timeZoneObjectToBeAdded, titleOfTheTimeZone);
 		},
 		stopClocks: function() {
@@ -325,7 +327,7 @@ app.directive('autoComplete', ['TimeZoneAutoCompleteFactory', 'TimeZoneClocksMan
 			timeZoneBeingAddedIsValid: '=',
 			includePeripehralLocations: '=',
 		},
-		controller: function ($scope, $element) {
+		controller: ['$scope', '$element', function ($scope, $element) {
 			$scope.includePeripehralLocations = function (isIncludePeripehralLocations) {
 				if (isIncludePeripehralLocations === true) {
 					console.log('Loading all possible search entries...');
@@ -344,7 +346,7 @@ app.directive('autoComplete', ['TimeZoneAutoCompleteFactory', 'TimeZoneClocksMan
 					$element.autocomplete().setOptions({ lookup: TimeZoneAutoCompleteFactory.getLocations() });
 				}
 			};
-		},
+		}],
         link: function(scope, elem, attr, ctrl) {
             elem.autocomplete({
 				lookupLimit: 10,
