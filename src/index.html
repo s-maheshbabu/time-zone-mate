@@ -37,7 +37,7 @@
 		<div class="row">
 			<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 				<p class="input-group">
-					<input type="text" validtime=true index=0 name="localTime" class="form-control" ng-model="localTime._timePart" ng-change="timestampChanged($index)" ui-timepicker time-picker-validator ui-timepicker-events />
+					<input type="text" validtime=true index=0 name="localTime" class="form-control bold-input" ng-model="localTime._timePart" ng-change="timestampChanged($index)" ui-timepicker time-picker-validator ui-timepicker-events />
 					<span class="input-group-btn">
 						<button type="button" class="btn green-button" ng-click="open($event, 0)"><i class="glyphicon glyphicon-calendar"></i></button>
 					</span>
@@ -122,7 +122,7 @@
 						<div class="row">
 							<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
 								<p class="input-group">
-									<input type="text" validtime=true class="form-control" index="(2*$parent.$index) + $index + 1" ng-model="addedTimeZone._timePart" ng-change="timestampChanged((2*$parent.$index) + $index + 1)" ui-timepicker time-picker-validator ui-timepicker-events>
+									<input type="text" validtime=true class="form-control bold-input" index="(2*$parent.$index) + $index + 1" ng-model="addedTimeZone._timePart" ng-change="timestampChanged((2*$parent.$index) + $index + 1)" ui-timepicker time-picker-validator ui-timepicker-events>
 									<span class="input-group-btn">
 										<button type="button" class="btn green-button" ng-click="open($event, (2*$parent.$index) + $index + 1)"><i class="glyphicon glyphicon-calendar"></i></button>
 									</span>

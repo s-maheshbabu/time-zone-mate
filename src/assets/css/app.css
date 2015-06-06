@@ -67,6 +67,10 @@ input[type="checkbox"]:checked + span:before {
   content: "\e067"; /* check */
 }
 
+.bold-input {
+  font-weight: bold;
+}
+
 .autocomplete-suggestions { border: 1px solid #46d633; background: #FFF; overflow: auto; }
 .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
 .autocomplete-selected { background: #F0F0F0; }
