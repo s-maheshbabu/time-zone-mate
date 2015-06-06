@@ -1,5 +1,3 @@
-var timeZoneObjectModule = angular.module('TimeZoneObjectModule',[]);
-
 var TimeZoneObject = (function() {
 	function TimeZoneObject($interval)
 	{
@@ -115,10 +113,6 @@ var TimeZoneObject = (function() {
 	return TimeZoneObject;
 })();
 
-timeZoneObjectModule.factory('NameBasedTimeZoneObject', [function() {
-    return NameBasedTimeZoneObject;
-}]);
-
 var NameBasedTimeZoneObject = function ($interval, timeZoneName, title)
 {
 	TimeZoneObject.call(this, $interval);
@@ -187,10 +181,6 @@ var NameBasedTimeZoneObject = function ($interval, timeZoneName, title)
 
 NameBasedTimeZoneObject.prototype = Object.create(TimeZoneObject.prototype);
 NameBasedTimeZoneObject.prototype.constructor = NameBasedTimeZoneObject;
-
-timeZoneObjectModule.factory('OffsetBasedTimeZoneObject', [function() {
-    return OffsetBasedTimeZoneObject;
-}]);
 
 var OffsetBasedTimeZoneObject = function ($interval, offsetInMinutes, title)
 {

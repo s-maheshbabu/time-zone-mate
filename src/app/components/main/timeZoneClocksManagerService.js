@@ -1,4 +1,4 @@
-angular.module('TimeZoneMate').service('TimeZoneClocksManager', ['NameBasedTimeZoneObject', 'OffsetBasedTimeZoneObject', '$interval', function(NameBasedTimeZoneObject, OffsetBasedTimeZoneObject, $interval) {
+angular.module('TimeZoneMate').service('TimeZoneClocksManager', ['$interval', function($interval) {
 	var clocksRunning = true;
 
 	var allTimeZones= [new NameBasedTimeZoneObject($interval, undefined, undefined), new OffsetBasedTimeZoneObject($interval, 0, 'UTC')];
