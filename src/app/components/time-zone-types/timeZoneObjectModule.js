@@ -1,4 +1,4 @@
-var timeZoneObjectModule= angular.module('TimeZoneObjectModule',[]);
+var timeZoneObjectModule = angular.module('TimeZoneObjectModule',[]);
 
 var TimeZoneObject = (function() {
 	function TimeZoneObject($interval)

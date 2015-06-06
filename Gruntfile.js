@@ -6,7 +6,7 @@ module.exports = function(grunt) {
     copy: {
       build: {
         cwd: 'src',
-        src: ['index.html', 'js/libraries/**', 'fonts/**', 'data/podunksToTimeZones.json' ],
+        src: ['index.html', 'app/**/*.js', 'assets/libs/**', 'assets/fonts/**', 'assets/data/podunksToTimeZones.json' ],
         dest: 'build',
         expand: true
       },
@@ -15,13 +15,15 @@ module.exports = function(grunt) {
       build: {
         src: ['build']
       },
+      scripts: {
+        src: ['build/**/*.js', 'build/app', '!build/app.js', '!build/assets/**']
+      },
     },
     cssmin: {
       build: {
-        cwd: 'src',
-        src: ['**/*.css'],
-        dest: 'build',
-        expand: true
+        files: {
+          'build/assets/css/app.css': ['src/assets/**/*.css']
+        }
       }
     },
     less: {
@@ -32,33 +34,32 @@ module.exports = function(grunt) {
           optimization: 2
         },
         files: {
-          "build/css/styles.css": "src/less/styles.less"
+          "build/assets/css/styles.css": "src/assets/less/styles.less"
         }
       }
     },
     uglify: {
       build: {
-        cwd: 'src',
-        src: ['*/*.js'],
-        dest: 'build',
-        expand: true,
+        files: {
+          'build/app.js': ['build/app/**/*.js']
+        },
         options: {
           mangle: true
         }
       }
     },
     watch: {
+      copy: {
+        files: [ 'src/index.html', 'src/app/**/*.js', 'src/assets/libs/**', 'src/assets/data/podunksToTimeZones.json', 'src/assets/fonts/**' ],
+        tasks: [ 'copy' ]
+      },
       scripts: {
-        files: 'src/*/*.js',
+        files: 'src/app/**/*.js',
         tasks: [ 'scripts' ]
       },
       stylesheets: {
-        files: [ 'src/**/*.css', 'src/less/styles.less' ],
+        files: [ 'src/assets/css/*.css', 'src/assets/less/*.less' ],
         tasks: [ 'stylesheets' ]
-      },
-      copy: {
-        files: [ 'src/index.html', 'src/js/libraries/**', 'src/data/podunksToTimeZones.json', 'src/fonts/**' ],
-        tasks: [ 'copy' ]
       }
     },
     connect: {
@@ -85,19 +86,19 @@ module.exports = function(grunt) {
   grunt.registerTask(
     'stylesheets',
     'Minifies CSS and complies/minifies less',
-    ['cssmin', 'less']
+    ['less', 'cssmin']
     );
 
   grunt.registerTask(
     'scripts',
     'Uglifies javascript and compresses.',
-    ['uglify']
+    ['uglify', 'clean:scripts']
     );
 
   grunt.registerTask(
     'build',
     'Compiles all of the assets and copies the files to the build directory.',
-    ['clean', 'copy', 'stylesheets', 'scripts']
+    ['clean:build', 'copy', 'stylesheets', 'scripts']
     );
 
   grunt.registerTask(
