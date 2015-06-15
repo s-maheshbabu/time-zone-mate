@@ -1,0 +1,13 @@
+# To copy all files into the build directory.
+grunt build
+
+# Copy all contents from the build directory into Google drive. Copying index.html is optional but doesn't hurt.
+
+# index.html needs to be deployed onto Google App Engine. So copy it into the deploy directory.
+grunt prepare_deploy
+
+# Go to the deploy directory and fix the import statements (for javascript, css etc.) to point to Google drive locations instead of relative paths.
+
+# Open Google Cloud SDK Shell (C:\Program Files\Google\Cloud SDK) and deploy the application.
+C:\Program Files\Google\Cloud SDK>appcfg.py -A timezonemate-webapp update E:\Doc
+uments\workspaces\TimeZoneConverter\time-zone-converter\deploy
