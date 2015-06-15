@@ -10,7 +10,13 @@ module.exports = function(grunt) {
         dest: 'build',
         expand: true
       },
-    },  
+      prepare_deploy: {
+        cwd: 'src',
+        src: ['index.html'],
+        dest: 'deploy/static',
+        expand: true
+      },
+    },
     clean: {
       build: {
         src: ['build']
@@ -83,6 +89,12 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-connect');
 
   // define the tasks
+  grunt.registerTask(
+    'prepare_deploy',
+    'Copies files in preparation to deploy to Google App Engine.',
+    ['copy:prepare_deploy']
+    );
+
   grunt.registerTask(
     'stylesheets',
     'Minifies CSS and complies/minifies less',
