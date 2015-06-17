@@ -6,13 +6,13 @@ module.exports = function(grunt) {
     copy: {
       build: {
         cwd: 'src',
-        src: ['index.html', 'app/**/*.js', 'assets/libs/**', 'assets/fonts/**', 'assets/data/podunksToTimeZones.json' ],
+        src: ['index.html', 'about.html', 'app/**/*.js', 'assets/libs/**', 'assets/fonts/**', 'assets/data/podunksToTimeZones.json' ],
         dest: 'build',
         expand: true
       },
       prepare_deploy: {
         cwd: 'src',
-        src: ['index.html'],
+        src: ['index.html', 'about.html', 'robots.txt'],
         dest: 'deploy/static',
         expand: true
       },
