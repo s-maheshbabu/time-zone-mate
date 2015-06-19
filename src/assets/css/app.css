@@ -51,6 +51,14 @@ Used for text that is not very important. For ex. a link to the about.html page
   font-weight: bold;
 }
 
+.color1 {
+  color: #00c6ff;
+}
+
+.color1 {
+  color: #46d633;
+}
+
 /*
 Together help keep content within a div centered.
 http://stackoverflow.com/questions/114543/horizontally-center-a-div-in-a-div

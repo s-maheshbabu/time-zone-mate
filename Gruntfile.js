@@ -56,7 +56,7 @@ module.exports = function(grunt) {
     },
     watch: {
       copy: {
-        files: [ 'src/index.html', 'src/app/**/*.js', 'src/assets/libs/**', 'src/assets/data/podunksToTimeZones.json', 'src/assets/fonts/**' ],
+        files: [ 'src/index.html', 'src/about.html', 'src/app/**/*.js', 'src/assets/libs/**', 'src/assets/data/podunksToTimeZones.json', 'src/assets/fonts/**' ],
         tasks: [ 'copy' ]
       },
       scripts: {

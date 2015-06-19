@@ -1,27 +1,76 @@
 <!DOCTYPE html>
 <html ng-app="TimeZoneMate" ng-strict-di>
-<head>
-<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
-<meta content="utf-8" http-equiv="encoding">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<head>
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" type="text/css" href="assets/css/styles.css">
+		<link rel="stylesheet" type="text/css" href="assets/css/app.css">
+		<!-- Google Analyitcs -->
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+			
+			  ga('create', 'UA-64120305-1', 'auto');
+			  ga('send', 'pageview');
+		</script>
+	</head>
+	<body>
+		<nav class="navbar navbar-default navbar-fixed-top" style="background-color:gray">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-lg-6 col-sm-6 col-xs-12">
+						<div class="row">
+							<a href="/">
+								<div class="col-lg-6 col-lg-offset-3 col-sm-8 col-sm-offset-2 col-xs-12">
+									<span class="heading-color1">TIME</span>
+									<span class="heading-color2">ZONE</span>
+									<span class="heading-color1">MATE</span>
+								</div>
+							</a>
+						</div>
+					</div>
+					<div class="col-lg-6 col-sm-6 col-xs-12"></div>
+				</div>
+			</div>
+		</nav>
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-10 col-lg-offset-1 col-sm-10 col-sm-offset-1 col-xs-12">
+					<span class="heading-color1">About</span>
+					<p>TimeZoneMate is designed to address two usecases:
+						<dl class="dl-horizontal">
+							<dt class="color1">World Clock</dt>
+							<dd>
+								<p>
+									<b class="color1">Lets you keep track of the current time in multiple locations/timezones at a glance.</b>
+								</p>As a software developer that worked with clients across several locations I always needed to know the current time in different
+								client locations to make sure I call people at the right time (when they are awake) or make software deployments at the right
+								time (when everyone is asleep). Instead of having to google for 'time in cityX' everytime, I figured it would be great to
+								have an application that would let me add as many locations and timezones as I want and let check the current time at a glance.</dd>
+							<dt
+							class="color1">Time converter</dt>
+								<dd>
+									<p>
+										<b class="color1">Aids in converting time across multiple timezones.</b>
+									</p>This was something I needed while troubleshooting issues. When interrelated systems across different timezones start acting
+									up, I needed a way to know what the local time was in each of those timezones at a given moment. While there are several
+									timezone converting utilities out in the wild, I believe TimeZoneConverter has two distinct advatages.
+									<ul>
+										<li>It lets you convert time across multiple timezones at a time whereas most existing utilities would only convert between
+											two timezones.</li>
+										<li>Unlike most other applications, it makes the entry process very easy and even fun. Instead of having to fill out a bunch
+											of input boxes and dropdowns, users can enter time in a very natural format (3 pm, 800, 3-30A etc.) and instantly get the
+											moment converted to different timezones.</li>
+										<ul>
+								</dd>
+						</dl>
+					</p>
+				</div>
+			</div>
+		</div>
+	</body>
 
-<!-- Google Analyitcs -->
-<script>
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	
-	  ga('create', 'UA-64120305-1', 'auto');
-	  ga('send', 'pageview');
-</script>
-
-</head>
-
-<body>
-<p>
-This is a web application that helps setup multiple clocks showing the time in different locations. <br />
-It also helps convert time between different time zones.
-</p>
-</body>
 </html>
