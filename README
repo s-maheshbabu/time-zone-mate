@@ -1,0 +1,4 @@
+Project Setup:
+1. Install Node by downloading the MSI (this already contains npm).
+2. In the project directory, execute npm_install.
+3. Install grunt by executing 'npm install -g grunt-cli'
