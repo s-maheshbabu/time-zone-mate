@@ -11,8 +11,8 @@ module.exports = function(grunt) {
         expand: true
       },
       prepare_deploy: {
-        cwd: 'src',
-        src: ['index.html', 'about.html', 'robots.txt'],
+        cwd: 'build',
+        src: ['**', 'robots.txt'],
         dest: 'deploy/static',
         expand: true
       },
