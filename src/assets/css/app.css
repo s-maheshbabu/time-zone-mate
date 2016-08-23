@@ -51,6 +51,12 @@ Used for text that is not very important. For ex. a link to the about.html page
   font-weight: bold;
 }
 
+.subheading-color2 {
+  color: #46d633;
+  font-size: 14px;
+  font-weight: bold;
+}
+
 .color1 {
   color: #00c6ff;
 }

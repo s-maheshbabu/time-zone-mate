@@ -8,7 +8,7 @@ module.exports = function(grunt) {
         files: [
           {
             cwd: 'src',
-            src: ['index.html', 'about.html', 'app/**/*.js', 'assets/libs/**', 'assets/fonts/**', 'assets/data/podunksToTimeZones.json' ],
+            src: ['index.html', 'about.html', 'blog/**', 'app/**/*.js', 'assets/libs/**', 'assets/fonts/**', 'assets/data/podunksToTimeZones.json' ],
             dest: 'build',
             expand: true
           },
@@ -67,7 +67,7 @@ module.exports = function(grunt) {
     },
     watch: {
       copy: {
-        files: [ 'src/index.html', 'src/about.html', 'src/app/**/*.js', 'src/assets/libs/**', 'src/assets/data/podunksToTimeZones.json', 'src/assets/fonts/**' ],
+        files: [ 'src/index.html', 'src/about.html', 'src/blog/**', 'src/app/**/*.js', 'src/assets/libs/**', 'src/assets/data/podunksToTimeZones.json', 'src/assets/fonts/**' ],
         tasks: [ 'copy' ]
       },
       scripts: {
