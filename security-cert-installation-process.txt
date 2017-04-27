@@ -1,0 +1,39 @@
+# Mac: 
+# Open https://medium.com/google-cloud/let-s-encrypt-with-app-engine-8047b0642895#.ut3caywmn (following instructions are sufficient but just in case)
+sudo rm -rf ~/Desktop/timezonemate.com
+sudo rm -rf /etc/letsencrypt/live/
+
+# Clone https://github.com/letsencrypt/letsencrypt
+./letsencrypt-auto certonly --manual
+
+# Will ask for domains to be secured. Enter timezonemate.com www.timezonemate.com
+# Will ask for a secure string to be put in a secure file on the domains being protected. 
+# For ex, it might ask to put yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.jSGTHrJETl9__uPFToCvRbiH6i2-6g9GxwuxGpfwO8A at http://www.timezonemate.com/.well-known/acme-challenge/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8
+
+# Windows:
+cd /d/Documents/workspaces/time-zone-mate/deploy/static
+cd ..
+vim app.yaml
+vim yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.txt and put the string above in that file
+- url: /.well-known/acme-challenge/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8
+  static_files: static/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.txt
+  upload: static/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.txt
+  expiration: "15m"
+
+# Open Google Cloud SDK Shell (C:\Users\smahe\AppData\Local\Google\Cloud SDK) and deploy the application.
+C:\Users\smahe\AppData\Local\Google\Cloud SDK>appcfg.py -A timezonemate-webapp update D:\Documents\workspaces\time-zone-mate\deploy
+
+# Mac:
+sudo cp -Lr /etc/letsencrypt/live/timezonemate.com ~/Desktop //It could be timezonemate.com-0004, for example)
+sudo chmod -R a+w ~/Desktop/timezonemate.com/
+sudo openssl rsa -in ~/Desktop/timezonemate.com/privkey.pem > ~/Desktop/timezonemate.com/privkey-rsa.pem
+
+# Send the files fullchain.pem and privkey-rsa.pem in ~/Desktop/timezonemate.com/ to the Windows machine.
+
+sudo rm -rf ~/Desktop/timezonemate.com
+sudo rm -rf /etc/letsencrypt/live/
+
+Windows:
+Go to https://console.cloud.google.com/appengine/settings/certificates?project=timezonemate-webapp and upload the above files.
+Delete the file created under /d/Documents/workspaces/time-zone-mate/deploy/static
+Delete the entry made inside app.yaml
