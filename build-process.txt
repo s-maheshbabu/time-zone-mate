@@ -1,8 +1,6 @@
 # To copy all files into the build directory.
 grunt build
 
-# Copy all contents from the build directory into Google drive. Copying index.html is optional but doesn't hurt.
-
 # index.html needs to be deployed onto Google App Engine. So copy it into the deploy directory.
 grunt prepare_deploy
 
