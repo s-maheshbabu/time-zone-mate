@@ -1,0 +1,79 @@
+runtime: python27
+api_version: 1
+threadsafe: no
+
+handlers: 
+# site root
+- url: /.well-known/acme-challenge/LyrjGUho_bH80-lu-1MlsntGaN3JBweH0P-51WFuJ9o
+  static_files: static/LyrjGUho_bH80-lu-1MlsntGaN3JBweH0P-51WFuJ9o.txt
+  upload: static/LyrjGUho_bH80-lu-1MlsntGaN3JBweH0P-51WFuJ9o.txt
+  expiration: "15m"
+
+- url: /
+  static_files: static/index.html
+  upload: static/index.html
+  expiration: "15m"
+
+- url: /(.*\.html)
+  mime_type: text/html
+  static_files: static/\1
+  upload: static/(.*\.html)
+  expiration: "5d"
+
+- url: /robots.txt
+  static_files: static/robots.txt
+  upload: static/robots.txt
+
+- url: /(.*\.css)
+  mime_type: text/css
+  static_files: static/\1
+  upload: static/(.*\.css)
+  expiration: "5d"
+
+- url: /(.*\.js)
+  mime_type: text/javascript
+  static_files: static/\1
+  upload: static/(.*\.js)
+  expiration: "5d"
+
+- url: /(.*\.json)
+  mime_type: application/json
+  static_files: static/\1
+  upload: static/(.*\.json)
+  expiration: "5d"
+
+- url: /(..ttf)
+  mime_type: font/truetype
+  static_files: static/\1
+  upload: static/(..ttf)
+  expiration: "5d"
+
+- url: /(..(svg|svgz))
+  mime_type: images/svg+xml
+  static_files: static/\1
+  upload: static/(..(svg|svgz))
+  expiration: "5d"
+
+- url: /(.*\.woff)
+  mime_type: application/x-font-woff
+  static_files: static/\1
+  upload: static/(.*\.woff)
+  expiration: "5d"
+
+- url: /(.*\.woff2)
+  mime_type: application/x-font-woff
+  static_files: static/\1
+  upload: static/(.*\.woff2)
+  expiration: "5d"
+
+- url: /(.*\.ico)
+  mime_type: image/x-icon
+  static_files: static/\1
+  upload: static/(.*\.ico)
+  expiration: "15d"
+
+- url: /(.*\.png)
+  mime_type: image/png
+  static_files: static/\1
+  upload: static/(.*\.png)
+  expiration: "15d"

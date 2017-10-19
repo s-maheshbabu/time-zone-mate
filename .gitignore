@@ -1,4 +1,4 @@
 build/
-deploy/
+deploy/static
 node_modules/
 *.DS_Store
