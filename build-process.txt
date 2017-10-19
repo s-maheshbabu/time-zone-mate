@@ -4,5 +4,12 @@ grunt build
 # index.html needs to be deployed onto Google App Engine. So copy it into the deploy directory.
 grunt prepare_deploy
 
+# Windows
 # Open Google Cloud SDK Shell (C:\Users\smahe\AppData\Local\Google\Cloud SDK) and deploy the application.
+# Make sure app.yaml exists in the deploy directory. Make changes to app.yaml is any new resources were added.
 C:\Users\smahe\AppData\Local\Google\Cloud SDK>appcfg.py -A timezonemate-webapp update D:\Documents\workspaces\time-zone-mate\deploy
+
+# Mac
+# Go to the deploy directory. Make sure app.yaml exists. Make changes to app.yaml is any new resources were added.
+cd $PROJ_HOME/deploy
+gcloud app deploy
