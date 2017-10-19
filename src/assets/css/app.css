@@ -1,3 +1,13 @@
+/* To make the button structure disappear and just have the icons work as buttons */
+.icon-button {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+}
+
 .error-message {
   font-family: "Times New Roman", Times, serif;
 	font-size: 0.875em;
@@ -63,6 +73,14 @@ Used for text that is not very important. For ex. a link to the about.html page
 
 .color1 {
   color: #46d633;
+}
+
+.close-button {
+  color: #ff0000;
+}
+
+.minimize-button {
+  color: #00c6ff;
 }
 
 /*

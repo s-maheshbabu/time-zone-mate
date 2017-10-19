@@ -107,7 +107,7 @@
 				<label> Add Clock </label>
 			</div>	
 			<div class="col-lg-1 col-sm-1 col-xs-3">
-				<button type="button" class="btn btn-info btn-circle pull-right" ng-click="toggleClockAdder()"><i class="glyphicon glyphicon-minus"></i></button>
+				<button type="button" class="icon-button minimize-button pull-right" ng-click="toggleClockAdder()"><i class="glyphicon glyphicon-minus-sign"></i></button>
 			</div>
 		</div>
 		<div class="row">
@@ -152,7 +152,7 @@
 								</div>
 							</div>
 							<div class="col-lg-1 col-sm-1 col-xs-3">
-								<button type="button" class="btn btn-danger btn-circle pull-right" index="(2*$parent.$index) + $index + 1" ng-click="removeTimeZone((2*$parent.$index) + $index + 1)"><i class="glyphicon glyphicon-remove"></i></button>
+								<button class="icon-button pull-right close-button" type="button" index="(2*$parent.$index) + $index + 1" ng-click="removeTimeZone((2*$parent.$index) + $index + 1)"><i class="glyphicon glyphicon-remove-circle"></i></button>
 							</div>
 						</div>
 						<div class="row">
