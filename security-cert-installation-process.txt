@@ -1,39 +1,50 @@
 # Mac: 
 # Open https://medium.com/google-cloud/let-s-encrypt-with-app-engine-8047b0642895#.ut3caywmn (following instructions are sufficient but just in case)
-sudo rm -rf ~/Desktop/timezonemate.com
+sudo rm -rf ~/Desktop/timezonemate.com*
 sudo rm -rf /etc/letsencrypt/live/
 
 # Clone https://github.com/letsencrypt/letsencrypt
+# Change directory into the git repository
 ./letsencrypt-auto certonly --manual
 
-# Will ask for domains to be secured. Enter timezonemate.com www.timezonemate.com
-# Will ask for a secure string to be put in a secure file on the domains being protected. 
+# Will ask for domains to be secured. Enter (without quotes) "timezonemate.com www.timezonemate.com"
+
+# You will be asked for a secure string to be put in a secure file on the domains being protected. This will be asked twice, once for timezonemate.com and then again for www.timezonemate.com. It is better to collect all security strings first and then make changes to app.yaml. Just hit enter after getting the first security string to get the second one. 
+# It is in the format <security_string> at http://www.timezonemate.com/.well-known/acme-challenge/<first_security_string_file_name>
 # For ex, it might ask to put yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.jSGTHrJETl9__uPFToCvRbiH6i2-6g9GxwuxGpfwO8A at http://www.timezonemate.com/.well-known/acme-challenge/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8
 
-# Windows:
-cd /d/Documents/workspaces/time-zone-mate/deploy/static
-cd ..
+# Change directory into time-zone-mate project.
+cd $PROJ_HOME/deploy
+
+vim static/http.txt
+# Put the first secure string in http.txt
+
+vim static/www.txt
+# Put the second security string in www.txt
+
 vim app.yaml
-vim yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.txt and put the string above in that file
-- url: /.well-known/acme-challenge/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8
-  static_files: static/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.txt
-  upload: static/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.txt
+# Add the following snippets into app.yaml file
+- url: /.well-known/acme-challenge/<first_security_string_file_name>
+  static_files: static/http.txt
+  upload: static/http.txt
   expiration: "15m"
 
-# Open Google Cloud SDK Shell (C:\Users\smahe\AppData\Local\Google\Cloud SDK) and deploy the application.
-C:\Users\smahe\AppData\Local\Google\Cloud SDK>appcfg.py -A timezonemate-webapp update D:\Documents\workspaces\time-zone-mate\deploy
+- url: /.well-known/acme-challenge/<second_security_string_file_name>
+  static_files: static/www.txt
+  upload: static/www.txt
+  expiration: "15m"
 
-# Mac:
-sudo cp -Lr /etc/letsencrypt/live/timezonemate.com ~/Desktop //It could be timezonemate.com-0004, for example)
-sudo chmod -R a+w ~/Desktop/timezonemate.com/
-sudo openssl rsa -in ~/Desktop/timezonemate.com/privkey.pem > ~/Desktop/timezonemate.com/privkey-rsa.pem
+# Deploy the application using instructions at $PROJ_HOME/build-process.txt
+# Verify that the right files with the right security strings are being vended by the website.
 
-# Send the files fullchain.pem and privkey-rsa.pem in ~/Desktop/timezonemate.com/ to the Windows machine.
+sudo cp -Lr /etc/letsencrypt/live/timezonemate.com-XXXX ~/Desktop //It could be timezonemate.com-0004, for example
+sudo chmod -R a+w ~/Desktop/timezonemate.com-XXXX/
+sudo openssl rsa -in ~/Desktop/timezonemate.com-XXXX/privkey.pem > ~/Desktop/timezonemate.com-XXXX/privkey-rsa.pem
 
-sudo rm -rf ~/Desktop/timezonemate.com
+Go to https://console.cloud.google.com/appengine/settings/certificates?project=timezonemate-webapp and upload fullchain.pem and privkey-rsa.pem files
+
+sudo rm -rf ~/Desktop/timezonemate.com*
 sudo rm -rf /etc/letsencrypt/live/
 
-Windows:
-Go to https://console.cloud.google.com/appengine/settings/certificates?project=timezonemate-webapp and upload the above files.
-Delete the file created under /d/Documents/workspaces/time-zone-mate/deploy/static
-Delete the entry made inside app.yaml
+# Delete the file created under $PROJ_HOME/deploy/static
+# Revert the entries made inside app.yaml
