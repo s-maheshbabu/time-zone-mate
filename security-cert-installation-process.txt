@@ -37,14 +37,18 @@ vim app.yaml
 # Deploy the application using instructions at $PROJ_HOME/build-process.txt
 # Verify that the right files with the right security strings are being vended by the website.
 
-sudo cp -Lr /etc/letsencrypt/live/timezonemate.com-XXXX ~/Desktop //It could be timezonemate.com-0004, for example
+sudo cp -r /etc/letsencrypt/live/timezonemate.com-XXXX ~/Desktop //It could be timezonemate.com-0004, for example
 sudo chmod -R a+w ~/Desktop/timezonemate.com-XXXX/
 sudo openssl rsa -in ~/Desktop/timezonemate.com-XXXX/privkey.pem > ~/Desktop/timezonemate.com-XXXX/privkey-rsa.pem
 
+# Remember to use timezonemate Google account, not personal Google account
 Go to https://console.cloud.google.com/appengine/settings/certificates?project=timezonemate-webapp and upload fullchain.pem and privkey-rsa.pem files
 
 sudo rm -rf ~/Desktop/timezonemate.com*
 sudo rm -rf /etc/letsencrypt/live/
 
-# Delete the file created under $PROJ_HOME/deploy/static
-# Revert the entries made inside app.yaml
+# Delete the file created under $PROJ_HOME/deploy/static and revert changes to app.yaml
+cd $PROJ_HOME
+rm deploy/static/http.txt
+rm deploy/static/www.txt
+git reset --hard
