@@ -1,3 +1,13 @@
+## ONE TIME NOTE. DELETE WHEN RENEWING THE NEXT TIME ##
+I saw the following when I renewed certs last time - 
+   To obtain a new or tweaked
+   version of this certificate in the future, simply run
+   letsencrypt-auto again. To non-interactively renew *all* of your
+   certificates, run "letsencrypt-auto renew"
+I think am following the first time certificate generation process every time. 
+Looks like there is a simplified process for renewals. Explore what that is
+and try to use "letsencrypt-auto renew".
+
 # Mac: 
 # Open https://medium.com/google-cloud/let-s-encrypt-with-app-engine-8047b0642895#.ut3caywmn (following instructions are sufficient but just in case)
 sudo rm -rf ~/Desktop/timezonemate.com*
@@ -8,12 +18,13 @@ sudo rm -rf /etc/letsencrypt/live/
 ./letsencrypt-auto certonly --manual
 
 # Will ask for domains to be secured. Enter (without quotes) "timezonemate.com www.timezonemate.com"
-
 # You will be asked for a secure string to be put in a secure file on the domains being protected. This will be asked twice, once for timezonemate.com and then again for www.timezonemate.com. It is better to collect all security strings first and then make changes to app.yaml. Just hit enter after getting the first security string to get the second one. 
 # It is in the format <security_string> at http://www.timezonemate.com/.well-known/acme-challenge/<first_security_string_file_name>
 # For ex, it might ask to put yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8.jSGTHrJETl9__uPFToCvRbiH6i2-6g9GxwuxGpfwO8A at http://www.timezonemate.com/.well-known/acme-challenge/yt91keilxuWSafKRSpQvG7SW_1H07TR-0mXtfVagQW8
 
-# Change directory into time-zone-mate project.
+# Note, the following process needs to be done rather quickly. Otherwise the letsencrypt command prompt will timeout.
+
+# Open and new terminal window and change directory into time-zone-mate project.
 cd $PROJ_HOME/deploy
 
 vim static/http.txt
@@ -35,14 +46,20 @@ vim app.yaml
   expiration: "15m"
 
 # Deploy the application using instructions at $PROJ_HOME/build-process.txt
-# Verify that the right files with the right security strings are being vended by the website.
+# Verify that the right files with the right security strings are being vended by the website. (optional)
 
+# Now, go back to the oringal terminal (running letsencrypt) and hit enter to contniue verification. 
+# The letsencrypt script will verify that the security strings are being vended by the website and if successful, will generate the certificates.
+# The output will also contain the date on which the new certificates will expire. This date will be used later to name the certificate that is created on appengine. 
+
+# Open a new terminal window.
 sudo cp -r /etc/letsencrypt/live/timezonemate.com-XXXX ~/Desktop //It could be timezonemate.com-0004, for example
 sudo chmod -R a+w ~/Desktop/timezonemate.com-XXXX/
 sudo openssl rsa -in ~/Desktop/timezonemate.com-XXXX/privkey.pem > ~/Desktop/timezonemate.com-XXXX/privkey-rsa.pem
 
 # Remember to use timezonemate Google account, not personal Google account
 Go to https://console.cloud.google.com/appengine/settings/certificates?project=timezonemate-webapp and upload fullchain.pem and privkey-rsa.pem files
+# Give the certificate a name like this SecureCertTime_ZoneMate_2018-09-19 (replace the date with the expiration date of the new certificate)
 
 sudo rm -rf ~/Desktop/timezonemate.com*
 sudo rm -rf /etc/letsencrypt/live/
@@ -52,3 +69,5 @@ cd $PROJ_HOME
 rm deploy/static/http.txt
 rm deploy/static/www.txt
 git reset --hard
+
+# Create a new calendar invite to renew the certificates before they expire.
