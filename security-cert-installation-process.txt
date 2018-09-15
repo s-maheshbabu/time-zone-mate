@@ -1,12 +1,9 @@
 ## ONE TIME NOTE. DELETE WHEN RENEWING THE NEXT TIME ##
-I saw the following when I renewed certs last time - 
-   To obtain a new or tweaked
-   version of this certificate in the future, simply run
-   letsencrypt-auto again. To non-interactively renew *all* of your
-   certificates, run "letsencrypt-auto renew"
-I think am following the first time certificate generation process every time. 
-Looks like there is a simplified process for renewals. Explore what that is
-and try to use "letsencrypt-auto renew".
+NOTE: Google started managing SSL automatically and for free for all apps on App Engine. So, I don't need to do this manual renewal anymore. 
+https://cloudplatform.googleblog.com/2017/09/introducing-managed-SSL-for-Google-App-Engine.html
+
+I don't need to do this manual certificate renewal anymore but am going to leave this file checked in anyways just in case, Google reneges
+on their commitment to support SSL automaticaly or if I need generate certificates for some other domain on a non-Google platform.
 
 # Mac: 
 # Open https://medium.com/google-cloud/let-s-encrypt-with-app-engine-8047b0642895#.ut3caywmn (following instructions are sufficient but just in case)
