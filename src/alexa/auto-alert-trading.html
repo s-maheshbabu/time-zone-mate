@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no" />
+	<title></title>
+
+	<!-- Compiled and minified CSS -->
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/css/materialize.min.css">
+	<link rel='stylesheet' href='./stylesheets/style.css' />
+</head>
+
+<body>
+	<nav class="white" role="navigation">
+		<div class="nav-wrapper container">
+			<a id="logo-container" class="brand-logo"><img src="./assets/icon.png" height="30" width="30"
+					alt="logo" />Auto Alert Trading</a>
+		</div>
+	</nav>
+	<div class="container">
+		<div class="row">
+			<div class="col s12 m6 offset-m3">
+
+				<!-- show any messages that come back with authentication -->
+				<h3 class="grey-text text-darken-1 light center">Log In</h3>
+
+				<div class="card hoverable grey lighten-4">
+					<div class="card-content">
+						<h5>ThinkOrSwim Auto Trading Solutions</h5>
+						<blockquote>
+							<p class="flow-text light">We build custom auto trading solutions for TD Ameritrade
+								platforms. Reach us at the following to learn more. </p>
+						</blockquote>
+						<div class="center">
+							<a href="" id="ACCOUNT_LINK" class="btn waves-effect waves-light blue lighten-2">
+								autoalerttrading@gmail.com </a>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+
+	<script>
+		var queryString = window.location.search;
+		queryString = queryString.substring(queryString.indexOf("?")); console.log(queryString);
+		var element = document.getElementById('ACCOUNT_LINK');
+		element.setAttribute("href", '' + queryString);
+	</script>
+
+	<footer class="page-footer blue">
+		<div class="container">
+			<div class="row">
+				<div class="col l12 s12">
+					<div class="col l12 s12 grey-text text-lighten-4 light center-align">
+						Auto Alert Trading is an automated order entry system for TOS.
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="footer-copyright">
+			<div class="container center-align">
+				Made by <a class="white-text text-lighten-3">Auto Alert Trading</a>. All rights reserved.
+			</div>
+		</div>
+	</footer>
+
+	<!--Import jQuery before materialize.js-->
+	<script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.8/js/materialize.min.js"></script>
+	<!-- iOS redirect code TODO remove this code when Amazon fixes 403 -->
+	<script src="/javascripts/ios.js"></script>
+</body>
+
+</html>
