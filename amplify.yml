@@ -6,10 +6,9 @@ frontend:
         - npm ci
     build:
       commands:
-        - npx grunt build
-        - npx grunt prepare_deploy
+        - npm run build
   artifacts:
-    baseDirectory: deploy/static
+    baseDirectory: build
     files:
       - '**/*'
   cache:
