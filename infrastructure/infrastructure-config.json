@@ -1,0 +1,9 @@
+{
+  "devoBranch": "master",
+  "prodBranch": "release-prod",
+  "domainName": "timezonemate.com",
+  "buildEnvironment": {
+    "account": "837603326872",
+    "region": "us-east-1"
+  }
+}

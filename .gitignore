@@ -1,4 +1,7 @@
 build/
+infrastructure/cdk.out/
+infrastructure/dist/
+infrastructure/node_modules/
 deploy/static
 node_modules/
 *.DS_Store
