@@ -155,7 +155,7 @@ var NameBasedTimeZoneObject = function ($interval, timeZoneName, title)
 	this.timeZoneName = timeZoneName;
 	if(!timeZoneName)
 	{
-		this.title = 'Local Time';
+		this.title = 'Local Time (Beta)';
 		this.timeZoneName = jstz.determine().name();
 	}
 	if(!this.title)
