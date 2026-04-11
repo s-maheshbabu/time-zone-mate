@@ -4,23 +4,27 @@ A world clock and timezone conversion web app at [timezonemate.com](https://time
 
 ## Tech Stack
 
-- **Frontend:** AngularJS 1.3, jQuery, Moment.js, Bootstrap
-- **Build:** Grunt (LESS compilation, JS/CSS minification)
+- **Frontend:** React 18, Tailwind CSS, Luxon
+- **Build:** Vite 5
 - **Hosting:** AWS Amplify
 - **Infrastructure:** AWS CDK (TypeScript)
 - **Domain:** AWS Route 53
 
 ## Local Development
 
-**Prerequisites:** Node.js, npm
+**Prerequisites:** Node.js 18+, npm
 
 ```bash
 npm install
-npm install -g grunt-cli
-grunt          # builds, watches for changes, and starts a local server at http://localhost:7337
+npm run dev    # starts dev server with hot reload at http://localhost:5173
 ```
 
-Build output goes to `deploy/static/`.
+To build and preview the production output:
+
+```bash
+npm run build    # builds to build/
+npm run preview  # serves the build/ output locally
+```
 
 ## Branch Strategy
 
@@ -45,9 +49,8 @@ The site is hosted on AWS Amplify with automatic CI/CD — every push to a track
 
 **Build process** (defined in `amplify.yml` at repo root):
 1. `npm ci` — installs dependencies
-2. `npx grunt build` — compiles LESS, minifies JS/CSS
-3. `npx grunt prepare_deploy` — copies build output to `deploy/static/`
-4. Amplify serves from `deploy/static/`
+2. `npm run build` — Vite builds React app to `build/`
+3. Amplify serves from `build/`
 
 **GitHub connection:** The Amplify app is connected to GitHub via the AWS Amplify GitHub App (authorized once via the Amplify Console — no tokens stored).
 
