@@ -63,7 +63,7 @@ export default function ClockRow({ clock, onTimeChange, onDateChange, onCalendar
   return (
     <div>
       <div className="flex items-center justify-between mb-1">
-        <label className="font-medium text-gray-700">{clock.title}</label>
+        <label className="font-bold" style={{ color: '#46d633' }}>{clock.title}</label>
         {children}
       </div>
 
