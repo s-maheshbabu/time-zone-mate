@@ -1,6 +1,6 @@
 import ClockRow from './ClockRow'
 
-export default function ClockList({ clocks, onTimeChange, onDateChange, onCalendarClick, onRemove }) {
+export default function ClockList({ clocks, clocksRunning, onTimeChange, onDateChange, onCalendarClick, onRemove }) {
   if (clocks.length === 0) return null
 
   // Display added clocks in a 2-column grid on medium+ screens.
@@ -16,6 +16,7 @@ export default function ClockList({ clocks, onTimeChange, onDateChange, onCalend
                   <ClockRow
                     key={clock.id}
                     clock={clock}
+                    clocksRunning={clocksRunning}
                     onTimeChange={value => onTimeChange(index, value)}
                     onDateChange={value => onDateChange(index, value)}
                     onCalendarClick={() => onCalendarClick(index)}

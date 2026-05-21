@@ -24,7 +24,7 @@ function parseTimeString(raw) {
 
 // Displays a single clock: time input, calendar button, full datetime label.
 // Used for both the local clock and added clocks.
-export default function ClockRow({ clock, onTimeChange, onDateChange, onCalendarClick, children }) {
+export default function ClockRow({ clock, clocksRunning, onTimeChange, onDateChange, onCalendarClick, children }) {
   const dateInputRef = useRef(null)
   const inputRef = useRef(null)
   const [editValue, setEditValue] = useState(null) // null = not editing
@@ -78,7 +78,7 @@ export default function ClockRow({ clock, onTimeChange, onDateChange, onCalendar
           onBlur={handleBlur}
           onKeyDown={handleKeyDown}
           className={`flex-1 px-3 py-2 font-bold border rounded-md focus:outline-none focus:ring-2 focus:ring-[#00c6ff] ${
-            clock.invalidTime ? 'border-red-500' : 'border-gray-300'
+            clock.invalidTime ? 'border-red-500 text-black' : `border-gray-300 ${clocksRunning ? 'text-black' : 'text-gray-400'}`
           }`}
         />
         <button

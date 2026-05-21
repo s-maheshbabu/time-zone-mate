@@ -95,6 +95,7 @@ export default function App() {
           <div className="max-w-lg mx-auto">
             <ClockRow
               clock={localClock}
+              clocksRunning={clocksRunning}
               onTimeChange={value => handleTimeChange(0, value)}
               onDateChange={value => handleDateChange(0, value)}
               onCalendarClick={() => handleCalendarClick(0)}
@@ -142,6 +143,7 @@ export default function App() {
         <div className="mt-2">
           <ClockList
             clocks={addedClocks}
+            clocksRunning={clocksRunning}
             onTimeChange={handleTimeChange}
             onDateChange={handleDateChange}
             onCalendarClick={handleCalendarClick}
