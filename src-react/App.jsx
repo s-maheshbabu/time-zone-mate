@@ -120,9 +120,9 @@ export default function App() {
               onClick={() => setIsAddPanelOpen(open => !open)}
               onMouseUp={e => e.currentTarget.blur()}
               className="px-4 py-2 rounded-md text-white text-sm font-medium"
-              style={{ backgroundColor: '#00c6ff' }}
+              style={{ backgroundColor: isAddPanelOpen ? '#0099cc' : '#00c6ff' }}
             >
-              Add Clock
+              {isAddPanelOpen ? 'Close' : 'Add Clock'}
             </button>
           </div>
         </div>
