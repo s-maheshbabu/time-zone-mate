@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ClockRow from './components/ClockRow'
@@ -31,6 +31,28 @@ export default function App() {
 
   const [isAddPanelOpen, setIsAddPanelOpen] = useState(false)
   const [peripheralsEnabled, setPeripheralsEnabled] = useState(false)
+
+  // Restore clocks from URL on mount.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    for (const title of params.getAll('c')) {
+      const tzName = getTimeZone(title)
+      if (tzName !== undefined) {
+        addNamedClock(tzName, title)
+      } else {
+        const offset = getOffset(title)
+        if (offset !== undefined) addOffsetClock(offset, title)
+      }
+    }
+  }, [])
+
+  // Keep URL in sync with added clocks.
+  useEffect(() => {
+    const params = new URLSearchParams()
+    addedClocks.forEach(clock => params.append('c', clock.title))
+    const qs = params.toString()
+    window.history.replaceState(null, '', qs ? `?${qs}` : window.location.pathname)
+  }, [addedClocks])
 
   function handleTimeChange(index, value) {
     if (!value) {
