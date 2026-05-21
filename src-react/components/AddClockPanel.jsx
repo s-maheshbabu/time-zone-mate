@@ -1,6 +1,6 @@
 import TimeZoneSearch from './TimeZoneSearch'
 
-export default function AddClockPanel({ onSelect, onTogglePeripherals, peripheralsEnabled, onClose }) {
+export default function AddClockPanel({ onSelect, onClose }) {
   return (
     <div className="container mx-auto px-4 mb-4">
       <div className="max-w-lg mx-auto">
@@ -15,11 +15,7 @@ export default function AddClockPanel({ onSelect, onTogglePeripherals, periphera
             &minus;
           </button>
         </div>
-        <TimeZoneSearch
-          onSelect={onSelect}
-          onTogglePeripherals={onTogglePeripherals}
-          peripheralsEnabled={peripheralsEnabled}
-        />
+        <TimeZoneSearch onSelect={onSelect} />
       </div>
     </div>
   )

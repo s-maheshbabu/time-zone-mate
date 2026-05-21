@@ -9,7 +9,6 @@ import {
   getTimeZone,
   getOffset,
   loadPeripheralLocations,
-  purgePeripheralLocations,
 } from './data/timeZoneData'
 
 export default function App() {
@@ -30,20 +29,21 @@ export default function App() {
   } = useClocks()
 
   const [isAddPanelOpen, setIsAddPanelOpen] = useState(false)
-  const [peripheralsEnabled, setPeripheralsEnabled] = useState(false)
 
-  // Restore clocks from URL on mount.
+  // Load full location dataset and restore clocks from URL on mount.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search)
-    for (const title of params.getAll('c')) {
-      const tzName = getTimeZone(title)
-      if (tzName !== undefined) {
-        addNamedClock(tzName, title)
-      } else {
-        const offset = getOffset(title)
-        if (offset !== undefined) addOffsetClock(offset, title)
+    loadPeripheralLocations().then(() => {
+      const params = new URLSearchParams(window.location.search)
+      for (const title of params.getAll('c')) {
+        const tzName = getTimeZone(title)
+        if (tzName !== undefined) {
+          addNamedClock(tzName, title)
+        } else {
+          const offset = getOffset(title)
+          if (offset !== undefined) addOffsetClock(offset, title)
+        }
       }
-    }
+    })
   }, [])
 
   // Keep URL in sync with added clocks.
@@ -96,15 +96,6 @@ export default function App() {
     }
   }
 
-  async function handleTogglePeripherals(enabled) {
-    setPeripheralsEnabled(enabled)
-    if (enabled) {
-      await loadPeripheralLocations()
-    } else {
-      purgePeripheralLocations()
-    }
-  }
-
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -154,8 +145,6 @@ export default function App() {
           {isAddPanelOpen && (
             <AddClockPanel
               onSelect={handleSelectLocation}
-              onTogglePeripherals={handleTogglePeripherals}
-              peripheralsEnabled={peripheralsEnabled}
               onClose={() => setIsAddPanelOpen(false)}
             />
           )}

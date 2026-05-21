@@ -53,10 +53,7 @@ function dedupeAndMerge(...arrays) {
 // --- Public API ---
 
 export async function loadPeripheralLocations() {
-  if (peripheralsLoaded) {
-    locationsToTimeZones = dedupeAndMerge(locationsToTimeZones, peripheralLocations);
-    return;
-  }
+  if (peripheralsLoaded) return;
 
   for (const [tzName, cities] of Object.entries(podunksToTimeZones)) {
     for (const city of cities) {
@@ -70,11 +67,6 @@ export async function loadPeripheralLocations() {
     peripheralLocations,
     timeZonesToTimeZones
   );
-}
-
-export function purgePeripheralLocations() {
-  locationsToTimeZones = dedupeAndMerge(countriesToTimeZones, majorUrbanAreasToTimeZones);
-  locationsToOffsets = dedupeAndMerge(offsetsToOffsets, abbreviationToTimeZones);
 }
 
 export function getLocations() {

@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { getLocations, isValidLocation } from '../data/timeZoneData'
 
-export default function TimeZoneSearch({ onSelect, onTogglePeripherals, peripheralsEnabled }) {
+export default function TimeZoneSearch({ onSelect }) {
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState([])
   const [isOpen, setIsOpen] = useState(false)
@@ -110,18 +110,6 @@ export default function TimeZoneSearch({ onSelect, onTogglePeripherals, peripher
           Sorry, that time zone is not supported.
         </p>
       )}
-
-      <div className="mt-2 flex justify-end">
-        <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer select-none">
-          <input
-            type="checkbox"
-            checked={peripheralsEnabled}
-            onChange={e => onTogglePeripherals(e.target.checked)}
-            className="rounded"
-          />
-          <span>Include all locations</span>
-        </label>
-      </div>
     </div>
   )
 }
