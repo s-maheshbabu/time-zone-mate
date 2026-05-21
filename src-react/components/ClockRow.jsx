@@ -31,7 +31,7 @@ export default function ClockRow({ clock, onTimeChange, onDateChange, onCalendar
 
   const formattedTime = clock.invalidTime ? '' : clock.dt.toFormat('hh:mm:ss a')
   const dateValue = clock.dt.toISODate()
-  const fullDisplay = clock.dt.toFormat("EEE MMM dd yyyy HH:mm:ss 'GMT'ZZ")
+  const fullDisplay = clock.dt.toFormat("EEE, MMM dd yyyy — 'GMT'ZZ")
   const isEditing = editValue !== null
 
   function handleFocus() {
